@@ -2,26 +2,30 @@
 
 # parcel4me-php
 
-*PHP one-click checkout and delivery package using [Parcel4Me](http://parcelfor.me/)*    
+*A PHP implementation of [Parcel4Me](http://parcelfor.me/)'s one-click checkout and delivery*
+
+This repository is a template implementatin of Parcel4Me.    
+It includes an "Abstract Class" package that can be used for connecting any PHP shopping cart, as well as a demonstration bare-bones *implementation*.  Creating a Parcel4Me plugin for any existing shopping cart requires simply swapping out the demo *implementation* here for a matching implimation for the existing cart.
+
+This repo is divided into three sections :
+
+* **parcel4me-php :** A reusable un-opinionated parcel4me-php package that can be used with any shopping cart    
+  *(this may later be converted into an independent [composer](https://getcomposer.org/) package)*
+* **Demo client :** Client HTML as a simple demo shell   
+* **Demo server :** The server *implementation* layer as a demo shell    
 
 
-This PHP *[packagist](https://packagist.org/)* package is an implementation of the *[Parcel for Me](http://parcelfor.me/)* [`p4m-login`](http://developer.parcelfor.me/docs/documentation/parcel-for-me-widgets/p4m-login-widget/host-server/) and [`p4m-checkout`](http://developer.parcelfor.me/docs/documentation/parcel-for-me-widgets/p4m-checkout-widget/host-server/) host server endpoints.  Parcel4Me allows frictionless checkout across any online store; This package allows an easy PHP implementation of Parcel4Me.
+## Quick Start
 
-## Quick Start Example
+[PHP](http://php.net/manual/en/intro-whatis.php) (at least version 5.3) and [Composer](https://getcomposer.org/) are required.    
+The Demo client also requires a basic webserver to run (eg. [serve](https://www.npmjs.com/package/serve)).   
 
-### Installation
+**Start the server**
 
-parcel4me-php is installed via Composer. 
+	php -S localhost:8000
 
-	$ composer require bramus/router 
+**Start the client**
+
+	serve --port 3000 demo-client/
 	
 
-
-### Example : login widget
-
-TODO
-
-
-## API
-
-TODO
