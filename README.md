@@ -9,7 +9,7 @@ It includes an "Abstract Class" package that can be used for connecting any PHP 
 
 This repo is divided into three sections :
 
-* **[parcel4me-php]() :** A reusable un-opinionated parcel4me-php package that can be used with any shopping cart    
+* **[parcel4me-php](parcel4me/README.md) :** A reusable un-opinionated parcel4me-php package that can be used with any shopping cart    
   *(this may later be converted into an independent [composer](https://getcomposer.org/) package)*
 * **[Demo client](demo-client/README.md) :** Client HTML as a simple demo shell   
 * **[Demo server](demo-server/README.md) :** The server *implementation* layer as a demo shell    
