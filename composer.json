@@ -1,7 +1,7 @@
 {
-    "name": "p4m/p4m-login",
+    "name": "parcel4me/server",
     "type": "library",
-    "description": "One-click checkout and delivery package using Parcel4Me",
+    "description": "An un-opinionated one-click checkout and delivery package using Parcel4Me",
     "keywords": ["parcel4me","p4m","checkout","shopping","cart","store"],
     "homepage": "https://github.com/krisrandall/parcel4me-php",
     "license": "MIT",
@@ -14,6 +14,12 @@
         }
     ],
     "require": {
-        "php": ">=5.3.0"
+        "php": ">=5.3.0",
+        "bramus/router": "^1.1"
+    },
+    "autoload": {
+        "psr-0": {
+            "P4M": "p4m/"
+        }
     }
 }
