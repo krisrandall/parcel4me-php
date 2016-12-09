@@ -1,5 +1,35 @@
 <?php
 
+namespace P4M\HostServer;
+
+define("ENV_MODE", "dev");
+define("SRV_PORT", "44333");
+define("API_PORT", "44321");
+
+
+class P4M_Shop_Urls
+{
+    private $p4mUrl  = 'https://'+ENV_MODE+'.parcelfor.me'+SRV_PORT;
+
+    private $endPoints = array(
+
+                'signup '=> '/signup'
+
+    );
+
+
+    public function endPoint($endPointStr) {
+
+        $idSrvUiUrl = $p4mUrl+"/ui/";
+
+        return $idSrvUiUrl+$endPoints[$endPointStr];
+
+    }
+
+
+}
+
+
 /*
 
 THIS IS CURRENTLY JUST COPIED FROM THE C# CLASS AS A REMINDER FOR ME ... 
@@ -45,5 +75,6 @@ namespace OpenOrderFramework.Models
 }
 
 */
+
 
 ?>

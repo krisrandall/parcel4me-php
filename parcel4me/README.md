@@ -1,4 +1,4 @@
-# [parcel4me-php](../README.md) : Abstract Class
+# [parcel4me-php](../README.md) : Interface
 
 parcel4me-php implements the Host Server methods required by the Parcel4Me Widgets.    
 <a href="http://developer.parcelfor.me/docs/documentation" target="_blank">See the documentation</a>.
@@ -36,6 +36,11 @@ TODO : implement all of the following :
 * paypalSetup
 * paypalCancel
 * purchaseComplete
+
+### p4m-register Widget
+
+* signup
+
 
 
 (see the [demo server implementation](../demo-server/README.md))
