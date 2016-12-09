@@ -160,7 +160,23 @@
 
     // Static route: / (homepage)
     $router->get('/', function () {
-        echo '<h1>p4m-server</h1><p>Try these routes:<p><ul><li>/p4m/getP4MAccessToken</li><li>/p4m/isLocallyLoggedIn</li><li>/p4m/localLogin?currentPage=</li><li>/p4m/restoreLastCart</li></ul>';
+
+        $supportedEndPoints = array( 
+                '/p4m/getP4MAccessToken',
+                '/p4m/isLocallyLoggedIn',
+                '/p4m/localLogin?currentPage',
+                '/p4m/restoreLastCart'
+        );
+        echo '<h1>p4m-server</h1>
+             <p>Try these routes:<p>
+             <ul>';
+        foreach($supportedEndPoints as $endPoint) {
+            echo '<li>
+                   <a href="'.$endPoint.'">'.$endPoint.'</a>
+                 </li>';
+        }
+        echo '</ul>';
+
     });
 
 
