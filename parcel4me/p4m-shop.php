@@ -27,7 +27,8 @@ abstract class P4M_Shop implements P4M_Shop_Interface
         }
 
         //$clientToken = request_Client_Credentials(TokenEndpoint, ClientId, ClientSecret, scope: "p4mRetail")
-
+        // NEXT : PHP OAuth
+        
 
     }
 }

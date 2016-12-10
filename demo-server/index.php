@@ -40,7 +40,8 @@
     class DemoShop extends P4M\HostServer\P4M_Shop {
 
         function userIsLoggedIn() {
-            return false;       
+            //return false;
+            return true;
         }
 
         function getConsumerFromLocalUser($user) {
@@ -128,6 +129,9 @@ var_dump($x);
         }
         echo '</ul>';
 
+        echo '<h1>Cart UI P4M widgets :</h1>';
+        echo 'todo..';
+        
     });
 
 
