@@ -44,78 +44,20 @@
         }
 
         function getConsumerFromLocalUser($user) {
-            $consumer = array( 
-                            'Id'                        =>	'', /*	 (read only) Assigned by P4M */
-                            'Locale'                    =>	'', /*	 (read only) Identifies where the consumer's data is stored */
-                            'Salutation'                =>  '', /*	 Mr, Ms, etc */
-                            'GivenName'                 => 	$user->first,
-                            'MiddleName'                =>	'',	 
-                            'FamilyName'                =>	$user->last,	 
-                            'Email'                     =>  $user->email,
-                            'MobilePhone'               =>  '',
-                            'PreferredCurrency'         => '', /* "GBP", "EUR", etc */
-                            'Language'                  => '', /* "en", "fr", "de", etc */
-                            'DOB'                       => '', /* date , not string */
-                            'Gender'                    => '',
-                            'Height'                    => '',
-                            'Weight'                    => '',
-                            'Waist'                     => '',
-                            'PreferredCarriers'         => '', /* (read only) */
-                            'PrefDeliveryAddressId'     => '', /* links to the addresses array below ? */
-                            'BillingAddressId'          => '', 
-                            'DefaultPaymentMethodId'    => '', 
-                            'DeliveryPreferences'       => '', /* useMyDeliveryAddress, useMyDropPoints, useRetailerDropPoint */
-                            'PreferSoonestDelivery'     => true,
-                            'ProfilePicUrl'             => '', 
-                            'ProfilePicHash'            => '', /* Can be used to check if the consumer's profile pic has changed */
-                            'Addresses'                 => array (
-                                // see : http://developer.parcelfor.me/docs/documentation/api-integration/models/address/
-                            ),
-                            'PaymentMethods'            => array ( /* (read only) */
-                            ),
-                            'Extras'                    => '' /* The Extras field contains a list of key/value pairs specific to the calling Retailer, and is available for them to store any additional information that may be needed */
-            );
-
+            $consumer = new P4M\HostServer\Models\Consumer();
+            $consumer->GivenName  = $user->first;
+            $consuemr->FamilyName = $user->last;
+            $consumer->Email      = $user->email;
             return $consumer;
         }
 
         function getRecentCart($user) {
-
-            $cart = array( 
-                /*
-                ConsumerId	String (read only)	 
-                Id	String (read only) 	 
-                SessionId	String	Consumer's session Id on retailer's site
-                RetailerId	String (read only)	 
-                RetailerName	String (read only)	 
-                Reference	String	Retailer reference (usually order no.)
-                AddressId	String 	see notes
-                BillingAddressId	String 	see notes
-                Date	UTC date	 
-                Currency	String	ISO currency code
-                ShippingAmt	Double	Calculated by retailer
-                Tax	Double	Calculated by retailer
-                Total	Double	 
-                ServiceId	String	Shipping service Id
-                ServiceName	String	Shipping service name e.g. standard, next day, etc
-                ExpDeliveryDate	UTC date	 
-                DateDelivered	UTC date	 
-                Carrier	String 	 
-                ConsignmentId	String 	 
-                CarrierToken	String 	Used to grant access to the carrier of the delivery
-                Status	String	Ordered, Despatched, etc
-                RetailerRating	Integer	 Consumer's rating of the purchase
-                CarrierRating	Integer	 Consumer's rating of the delivery
-                PaymentType	String	"DB" or "PA" (see notes)
-                PayMethodId	String	 The selected card token used for payment
-                PaymentId	String (read only)	 P4M transaction Id
-                AuthCode	String (read only)	 Used in back office transactions
-                PurchaseConfirmedTS	UTC date (read only)	 Date and time purchased was confirmed by the PSP
-                Items	List (CartItems) 	 
-                Dicounts	List (Discounts)	 
-                */
-            );
-
+            $cart = new P4M\HostServer\Models\Cart();
+            /*
+                some logic goes here to fetch my cart from 
+                my shopping cart DB and put the details into 
+                this $cart object 
+            */
             return $cart;
         }
 

@@ -9,20 +9,20 @@ define("API_PORT", "44321");
 
 class P4M_Shop_Urls
 {
-    private $p4mUrl  = 'https://'+ENV_MODE+'.parcelfor.me'+SRV_PORT;
+    private static $p4mUrl  = 'https://'.ENV_MODE.'.parcelfor.me:'.SRV_PORT;
 
-    private $endPoints = array(
+    private static $endPoints = array(
 
-                'signup '=> '/signup'
+                'signup' => '/signup'
 
     );
 
 
-    public function endPoint($endPointStr) {
-
-        $idSrvUiUrl = $p4mUrl+"/ui/";
-
-        return $idSrvUiUrl+$endPoints[$endPointStr];
+    public static function endPoint($endPointStr) {
+        
+        $idSrvUiUrl = self::$p4mUrl."/ui";
+        $ep = $idSrvUiUrl.self::$endPoints[$endPointStr];
+        return $ep;
 
     }
 

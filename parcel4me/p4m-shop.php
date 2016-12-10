@@ -4,6 +4,7 @@ namespace P4M\HostServer;
 
 require 'p4m-shop-interface.php';
 require 'p4m-urls.php';
+require 'p4m-models.php';
 
 
 abstract class P4M_Shop implements P4M_Shop_Interface
@@ -19,9 +20,9 @@ abstract class P4M_Shop implements P4M_Shop_Interface
         // PHP version of this psuedo code :
         // http://developer.parcelfor.me/docs/documentation/parcel-for-me-widgets/p4m-register-widget/signup/
 
-        if (!userIsLoggedIn()) {
-            $uiUrl = P4M_Shop_Urls.endPoint('signup');
-            header('Location: https://www.google.com'); 
+        if (!$this->userIsLoggedIn()) {
+            $uiUrl = P4M_Shop_Urls::endPoint('signup');
+            header("Location: {$uiUrl}"); 
             exit();
         }
 
@@ -29,8 +30,8 @@ abstract class P4M_Shop implements P4M_Shop_Interface
 
 
     }
-
-
 }
+
+
 
 ?>
