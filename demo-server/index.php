@@ -35,16 +35,12 @@
         \_______/|/     \||/       (_______/(_______/|/     \|(_______/|/    )_)   )_(   |/     \|   )_(   \_______/(_______)|/    )_)  
     */
     // This is a bare bones demo implementation,
-    // and empty shell to be filled out for a real shopping cart
-    // we also have a few different dummy-profiles that can be switched in here :
-
-    //require __DIR__.'/dummy-profiles/not-logged-in.php';
-    require __DIR__.'/dummy-profiles/demo-user-1.php';
+    // an empty shell to be filled out for a real shopping cart
 
     class DemoShop extends P4M\HostServer\P4M_Shop {
 
         function userIsLoggedIn() {
-            return $testProfileData['loggedIn'];            
+            return false;       
         }
 
         function getConsumerFromLocalUser($user) {
@@ -130,6 +126,17 @@
     }
 
 
+    /// Define the Instance :
+    $my_shopping_cart = new DemoShop();
+    /*
+$usr = new stdClass();
+$usr->first = 'f';
+$usr->last='l';
+$usr->email='e@mail.com';
+$x = ( $my_shopping_cart->getConsumerFromLocalUser( $usr ) );
+var_dump($x);
+    */
+
     /*
         _______  _______          _________ _______  _______ 
         (  ____ )(  ___  )|\     /|\__   __/(  ____ \(  ____ )
@@ -162,10 +169,12 @@
     $router->get('/', function () {
 
         $supportedEndPoints = array( 
+                '/p4m/signup',
                 '/p4m/getP4MAccessToken',
                 '/p4m/isLocallyLoggedIn',
                 '/p4m/localLogin?currentPage',
-                '/p4m/restoreLastCart'
+                '/p4m/restoreLastCart',
+                '/error/(message)'
         );
         echo '<h1>p4m-server</h1>
              <p>Try these routes:<p>
@@ -185,14 +194,27 @@
     // and : https://github.com/ParcelForMe/p4m-demo-shop/blob/master/OpenOrderFramework/Controllers/P4MTokenController.cs
     // Subrouting
 
-    // Dynamic route: /hello/name
-    $router->get('/p4m/(\w+)', function ($name) {
-        echo 'Hello ' . htmlentities($name);
+    // Dynamic route: p4m/*
+    $router->get('/p4m/(\w+)', function ($p4mEndpoint) {
+
+        global $my_shopping_cart;
+
+        switch($p4mEndpoint) {
+
+            case 'signup' :
+                $my_shopping_cart->signUp();
+                break;
+
+            default:
+                echo 'Hello unhandled endpoint : ' . htmlentities($p4mEndpoint);
+
+        }
+        
     });
 
 
     // Dynamic route: /hello/name
-    $router->get('/error/(\w+)', function ($msg) {
+    $router->get('/error/(.*)', function ($msg) {
         echo 'Error: ' . htmlentities($msg);
     });
     $router->run();
