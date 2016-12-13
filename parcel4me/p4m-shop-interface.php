@@ -1,6 +1,6 @@
 <?php
 
-namespace P4M\HostServer;
+namespace P4M;
 
 interface P4M_Shop_Interface {
     

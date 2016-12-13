@@ -1,6 +1,6 @@
 <?php
 
-namespace P4M\HostServer;
+namespace P4M;
 
 define("ENV_MODE", "dev");
 define("SRV_PORT", "44333");

@@ -3,7 +3,7 @@
 // class to use for setting and getting the config used by P4M
 
 
-namespace P4M\HostServer;
+namespace P4M;
 
 // Settings class concept from : http://stackoverflow.com/a/3724689/1290746
 abstract class Settings

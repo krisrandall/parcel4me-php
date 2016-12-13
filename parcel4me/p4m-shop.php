@@ -1,6 +1,9 @@
 <?php
 
-namespace P4M\HostServer;
+namespace P4M;
+
+// Require composer autoloader
+require_once __DIR__.'/vendor/autoload.php';
 
 require 'p4m-shop-interface.php';
 require 'p4m-urls.php';
@@ -27,10 +30,10 @@ abstract class P4M_Shop implements P4M_Shop_Interface
             exit();
         }
 
-        $oidc = new OpenIDConnectClient('https://id.provider.com/',
-                                        Settings::getProtected('OpenIdConnectClientId'),
-                                        Settings::getProtected('OpenIdConnectClientSecret') );
-
+        $oidc = new \OpenIDConnectClient(Settings::getPublic('OpenIdConnect:RedirectUrl'),
+                                         Settings::getPublic('OpenIdConnect:ClientId'),
+                                         Settings::getPublic('OpenIdConnect:ClientSecret') );
+        $oidc->addScope('p4mRetail');
         $oidc->authenticate();
         $name = $oidc->requestUserInfo('given_name');
 

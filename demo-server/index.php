@@ -37,14 +37,15 @@
 
     // Set Config
 
-    P4M\HostServer\Settings::setProtected('OpenIdConnectClientId',      '10004');
-    P4M\HostServer\Settings::setProtected('OpenIdConnectClientSecret',  'secret');
+    P4M\Settings::setPublic('OpenIdConnect:ClientId',     '10004');
+    P4M\Settings::setPublic('OpenIdConnect:ClientSecret', 'secret');
+    P4M\Settings::setPublic('OpenIdConnect:RedirectUrl',  'http://localhost:8000/p4m/getP4MAccessToken');
 
 
     // This is a bare bones demo implementation,
     // an empty shell to be filled out for a real shopping cart
 
-    class DemoShop extends P4M\HostServer\P4M_Shop {
+    class DemoShop extends P4M\P4M_Shop {
 
         function userIsLoggedIn() {
             //return false;
@@ -52,7 +53,7 @@
         }
 
         function getConsumerFromLocalUser($user) {
-            $consumer = new P4M\HostServer\Models\Consumer();
+            $consumer = new P4M\Models\Consumer();
             $consumer->GivenName  = $user->first;
             $consuemr->FamilyName = $user->last;
             $consumer->Email      = $user->email;
@@ -60,7 +61,7 @@
         }
 
         function getRecentCart($user) {
-            $cart = new P4M\HostServer\Models\Cart();
+            $cart = new P4M\Models\Cart();
             /*
                 some logic goes here to fetch my cart from 
                 my shopping cart DB and put the details into 

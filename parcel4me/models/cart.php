@@ -1,6 +1,6 @@
 <?php
 
-namespace P4M\HostServer\Models;
+namespace P4M\Models;
 
 /* 
 
