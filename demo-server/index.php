@@ -34,6 +34,13 @@
         ___) (___| )   ( || )      | (____/\| (____/\| )   ( || (____/\| )  \  |   | |   | )   ( |   | |   ___) (___| (___) || )  \  |
         \_______/|/     \||/       (_______/(_______/|/     \|(_______/|/    )_)   )_(   |/     \|   )_(   \_______/(_______)|/    )_)  
     */
+
+    // Set Config
+
+    P4M\HostServer\Settings::setProtected('OpenIdConnectClientId',      '10004');
+    P4M\HostServer\Settings::setProtected('OpenIdConnectClientSecret',  'secret');
+
+
     // This is a bare bones demo implementation,
     // an empty shell to be filled out for a real shopping cart
 

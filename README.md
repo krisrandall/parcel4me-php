@@ -20,13 +20,19 @@ This repo is divided into three sections :
 [PHP](http://php.net/manual/en/intro-whatis.php) (at least version 5.3) and [Composer](https://getcomposer.org/) are required.    
 The Demo client also requires a basic webserver to run (eg. [serve](https://www.npmjs.com/package/serve)).   
 
+**Composer install**
+
+    $ cd parcel4me;   composer install; cd ..
+    $ cd demo-server; composer install; cd ..
+   
+   
 **Start the server**
 
-	php -S localhost:8000
+	$ php -S localhost:8000
 
 **Start the client**
 
-	serve --port 3000 demo-client/
+	$ serve --port 3000 demo-client/
 	
 **Open the server API**   
  

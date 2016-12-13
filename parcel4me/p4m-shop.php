@@ -5,6 +5,7 @@ namespace P4M\HostServer;
 require 'p4m-shop-interface.php';
 require 'p4m-urls.php';
 require 'p4m-models.php';
+require 'settings.php';
 
 
 abstract class P4M_Shop implements P4M_Shop_Interface
@@ -25,6 +26,13 @@ abstract class P4M_Shop implements P4M_Shop_Interface
             header("Location: {$uiUrl}"); 
             exit();
         }
+
+        $oidc = new OpenIDConnectClient('https://id.provider.com/',
+                                        Settings::getProtected('OpenIdConnectClientId'),
+                                        Settings::getProtected('OpenIdConnectClientSecret') );
+
+        $oidc->authenticate();
+        $name = $oidc->requestUserInfo('given_name');
 
         //$clientToken = request_Client_Credentials(TokenEndpoint, ClientId, ClientSecret, scope: "p4mRetail")
         // NEXT : PHP Open Id connect
