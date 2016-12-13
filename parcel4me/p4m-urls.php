@@ -13,15 +13,16 @@ class P4M_Shop_Urls
 
     private static $endPoints = array(
 
-                'signup' => '/signup'
+                'base_url'      => '',
+                'signup'        => '/ui/signup',
+                'connect_token' => '/connect/token'
 
     );
 
 
     public static function endPoint($endPointStr) {
-        
-        $idSrvUiUrl = self::$p4mUrl."/ui";
-        $ep = $idSrvUiUrl.self::$endPoints[$endPointStr];
+
+        $ep = self::$p4mUrl . self::$endPoints[$endPointStr];
         return $ep;
 
     }
