@@ -122,9 +122,6 @@ var_dump($x);
         $supportedEndPoints = array( 
                 '/p4m/signup',
                 '/p4m/getP4MAccessToken',
-                '/p4m/isLocallyLoggedIn',
-                '/p4m/localLogin?currentPage',
-                '/p4m/restoreLastCart',
                 '/error/(message)'
         );
         echo '<h1>p4m-server</h1>
@@ -157,6 +154,10 @@ var_dump($x);
 
             case 'signup' :
                 $my_shopping_cart->signUp();
+                break;
+
+            case 'getP4MAccessToken' :
+                $my_shopping_cart->getP4MAccessToken();
                 break;
 
             default:

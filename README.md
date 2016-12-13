@@ -17,7 +17,7 @@ This repo is divided into three sections :
 
 ## Quick Start
 
-[PHP](http://php.net/manual/en/intro-whatis.php) (at least version 5.3) and [Composer](https://getcomposer.org/) are required.    
+[PHP](http://php.net/manual/en/intro-whatis.php) (at least version 5.5) and [Composer](https://getcomposer.org/) are required.    
 The Demo client also requires a basic webserver to run (eg. [serve](https://www.npmjs.com/package/serve)).   
 
 **Composer install**

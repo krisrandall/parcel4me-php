@@ -13,9 +13,12 @@ class P4M_Shop_Urls
 
     private static $endPoints = array(
 
-                'base_url'      => '',
-                'signup'        => '/ui/signup',
-                'connect_token' => '/connect/token'
+                'base_url'                  => '',
+                'signup'                    => '/ui/signup',
+                'connect_token'             => '/connect/token',
+                'authorize'                 => '/connect/authorize',
+                'resource_owner_details'    => '/connect/resource'   /// ?? i don't know if this is real, my OAUTH2 lib needs it defined
+                
 
     );
 

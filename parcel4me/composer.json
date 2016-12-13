@@ -1,5 +1,5 @@
 {
     "require": {
-        "jumbojett/openid-connect-php": "0.1.*"
+        "krisrandall/openid-connect-with-client-credentials-php": "dev-master"
     }
 }
