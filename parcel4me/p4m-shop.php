@@ -27,7 +27,7 @@ abstract class P4M_Shop implements P4M_Shop_Interface
 
 
     private function somethingWentWrong($message) {
-        error_log("somethingWentWrong("+$message+") :)");
+        error_log("somethingWentWrong(" . $message . ") ". $this->localErrorPageUrl($message));
         header("Location: ".$this->localErrorPageUrl($message)); 
         exit();  
     }
@@ -104,24 +104,56 @@ abstract class P4M_Shop implements P4M_Shop_Interface
         // Send the API request 
 
         $curl = curl_init();
+
         curl_setopt_array($curl, array(
-            CURLOPT_URL             => P4M_Shop_Urls::endPoint('registerConsumer'),
-            CURLOPT_POST            => 1,
-            CURLOPT_POSTFIELDS      => $consumerAndCartMessage,
-            CURLOPT_HTTPHEADER      => array(
-                                            'Authorization' => $clientCredentials->token_type . ' ' . 
-                                                               $clientCredentials->access_token,
-                                            'Accept'        => 'application/json',
-                                            'Content-Type'  => 'application/json'
-                                        )
+            // CURLOPT_PORT => "44321",
+            CURLOPT_URL => P4M_Shop_Urls::endPoint('registerConsumer'),
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => "",
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_TIMEOUT => 30,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => "POST",
+            CURLOPT_POSTFIELDS => $consumerAndCartMessage,
+            CURLOPT_HTTPHEADER => array(
+                "accept: application/json",
+                "authorization: " . $clientCredentials->token_type . ' ' . 
+                                    $clientCredentials->access_token,
+                "cache-control: no-cache",
+                "content-type: application/json"
+            )
         ));
 
-        // Send the request & save response to $resp
-        curl_setopt($curl, CURLINFO_HEADER_OUT, true);
-        $resp = curl_exec($curl);
-        $information = curl_getinfo($curl);
+        $response = curl_exec($curl);
+        $err = curl_error($curl);
+
+        curl_close($curl);
+
+        if ($err) {
+            $this->somethingWentWrong("cURL Error #:" . $err);
+        } else {
+
+            $rob = json_decode($response);
 
 
+            if (!property_exists($rob, 'Success')) {
+
+                $this->somethingWentWrong("Error registering with P4M : No 'Success' property of response received");
+
+            } elseif (!$rob->Success) {
+
+                $this->somethingWentWrong("Error registering with P4M : " . $rob->Error);
+
+            } else {
+
+                echo "HOORAY!!";
+                echo $response;
+
+            }
+        }
+
+
+/*
 echo $consumerAndCartMessage;
 echo '<hr>';
         echo '<b>';
@@ -136,10 +168,8 @@ echo '<hr>';
         echo '</pre>';
 echo '<br>';
 var_dump($clientCredentials);
+*/
 
-
-        // Close request to clear up some resources
-        curl_close($curl);
     }
 
 

@@ -85,7 +85,7 @@
         }
 
         function localErrorPageUrl($message) {
-            return $_SERVER['HTTP_HOST'] + '/error/' + urlencode($message);
+            return 'http://' . $_SERVER['HTTP_HOST'] . '/error/' . urlencode($message);
         }
 
     }
@@ -178,7 +178,7 @@
 
     // Dynamic route: /hello/name
     $router->get('/error/(.*)', function ($msg) {
-        echo 'Error: ' . htmlentities($msg);
+        echo '<h1>Error: <span style="color: red;">' . urldecode(htmlentities($msg)) . '</span></h1>';
     });
     $router->run();
 
