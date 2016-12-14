@@ -52,21 +52,35 @@
             return true;
         }
 
-        function getConsumerFromLocalUser($user) {
+        function getConsumerFromCurrentUser() {
+            /* 
+                some logic goes here to fetch the 
+                details of the current user 
+            */
+            $user = new stdClass();
+            $user->first = 'First';
+            $user->last  = 'Last';
+            $user->email = 'new_person@mailinator.com';
+
+            // Convert the user from the shopping cart DB into a 
+            // P4M Consumer
             $consumer = new P4M\Models\Consumer();
             $consumer->GivenName  = $user->first;
-            $consuemr->FamilyName = $user->last;
+            $consumer->FamilyName = $user->last;
             $consumer->Email      = $user->email;
             return $consumer;
         }
 
-        function getRecentCart($user) {
-            $cart = new P4M\Models\Cart();
+        function getCartOfCurrentUser() {
             /*
                 some logic goes here to fetch my cart from 
                 my shopping cart DB and put the details into 
                 this $cart object 
             */
+
+            // Convert the shopping cart from the shopping cart DB into a 
+            // P4M Cart
+            $cart = new P4M\Models\Cart();
             return $cart;
         }
 
@@ -79,14 +93,8 @@
 
     /// Define the Instance :
     $my_shopping_cart = new DemoShop();
-    /*
-$usr = new stdClass();
-$usr->first = 'f';
-$usr->last='l';
-$usr->email='e@mail.com';
-$x = ( $my_shopping_cart->getConsumerFromLocalUser( $usr ) );
-var_dump($x);
-    */
+
+
 
     /*
         _______  _______          _________ _______  _______ 

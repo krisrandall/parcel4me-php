@@ -13,13 +13,13 @@ interface P4M_Shop_Interface {
         return a populated consumer JSON object as defined by the model :
         http://developer.parcelfor.me/docs/documentation/api-integration/models/consumer/
     */
-    public function getConsumerFromLocalUser($user);
+    public function getConsumerFromCurrentUser();
     
     /**
         return the users current shopping cart as a JSON object as defined here :
         http://developer.parcelfor.me/docs/documentation/api-integration/models/cart/
     */
-    public function getRecentCart($user);
+    public function getCartOfCurrentUser();
 
 
     /**
