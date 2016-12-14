@@ -23,6 +23,11 @@ abstract class P4M_Shop implements P4M_Shop_Interface
     abstract public function localErrorPageUrl($message);
 
 
+    private function somethingWentWrong($message) {
+        header("Location: ".$this->localErrorPageUrl($message)); 
+        exit();  
+    }
+
     public function signUp() {
         // PHP version of this psuedo code :
         // http://developer.parcelfor.me/docs/documentation/parcel-for-me-widgets/p4m-register-widget/signup/
@@ -33,26 +38,21 @@ abstract class P4M_Shop implements P4M_Shop_Interface
             exit();
         }
 
-        $clientCredentialsToken = false;
+        $clientCredentials = false;
 
 
-        shm_remove(\shm_attach(SHM_IDENTIFIER)); // DEBUGGING ONLY !
+        // shm_remove(\shm_attach(SHM_IDENTIFIER)); // DEBUGGING ONLY !
 
 
         // do we have a stored client ?
         if (\shm_has_var(\shm_attach(SHM_IDENTIFIER), SHM_ClientCredentialsToken)) {
-            // is it about to expire
+            // is it about to expire ?
             // TODO - check expiry of token
-            $clientCredentialsToken = \shm_get_var(\shm_attach(SHM_IDENTIFIER), SHM_ClientCredentialsToken);
-            echo " existing OKEN :<pre>";
-            var_dump($clientCredentialsToken);
-            echo "</pre>";
-
-
+            $clientCredentials = \shm_get_var(\shm_attach(SHM_IDENTIFIER), SHM_ClientCredentialsToken);
         }
    
 
-        if (!$clientCredentialsToken) {
+        if (!$clientCredentials) {
 
             $oidc = new \OpenIDConnectClient(P4M_Shop_Urls::endPoint('base_url'),
                                              Settings::getPublic('OpenIdConnect:ClientId'),
@@ -60,17 +60,34 @@ abstract class P4M_Shop implements P4M_Shop_Interface
             $oidc->providerConfigParam(array('token_endpoint'=>P4M_Shop_Urls::endPoint('connect_token')));
             $oidc->addScope('p4mRetail');
 
-            $clientCredentialsToken = $oidc->requestClientCredentialsToken();
+            $clientCredentials = $oidc->requestClientCredentialsToken();
 
-            echo " HERE THE TOKEN :<pre>";
-            var_dump($clientCredentialsToken);
-            echo "</pre>";
-echo($clientCredentialsToken->access_token);
+            // check that it has the properties "access_token" and "token_type"
+            if ( (!property_exists($clientCredentials, 'token_type')) ||
+                 (!property_exists($clientCredentials, 'access_token')) 
+            ) {
+                $this->somethingWentWrong('Invalid Client Credentials returned :'.json_encode($clientCredentials));
+            }
+                 
+            /* TODO : check the token is valid */
+            //\Firebase\JWT\JWT::decode($clientCredentials->access_token, ** need to get key from OAUTH2 end point **, array('HS256'));
 
-
-            \shm_put_var(\shm_attach(SHM_IDENTIFIER), SHM_ClientCredentialsToken, $clientCredentialsToken);
+            \shm_put_var(\shm_attach(SHM_IDENTIFIER), SHM_ClientCredentialsToken, $clientCredentials);
 
         }
+
+            echo " HERE THE TOKEN :<pre>";
+            var_dump($clientCredentials);
+            echo "</pre>";
+echo($clientCredentials->access_token);
+
+        // check the token is valid
+  //      $decodedToken = \Firebase\JWT\JWT::decode($clientCredentials->access_token, '', array('HS256'));
+//echo $decodedToken;
+/*
+
+      
+*/
 
         //$clientToken = request_Client_Credentials(TokenEndpoint, ClientId, ClientSecret, scope: "p4mRetail")
         // NEXT : PHP Open Id connect
