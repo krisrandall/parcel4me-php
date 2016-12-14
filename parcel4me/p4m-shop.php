@@ -27,7 +27,7 @@ abstract class P4M_Shop implements P4M_Shop_Interface
 
 
     private function somethingWentWrong($message) {
-        error_log("somethingWentWrong(" . $message . ") ". $this->localErrorPageUrl($message));
+        //error_log("somethingWentWrong(" . $message . ") ". $this->localErrorPageUrl($message));
         header("Location: ".$this->localErrorPageUrl($message)); 
         exit();  
     }
@@ -133,11 +133,12 @@ abstract class P4M_Shop implements P4M_Shop_Interface
             $this->somethingWentWrong("cURL Error #:" . $err);
         } else {
 
+            $rob = new \stdClass();
             $rob = json_decode($response);
 
-
-            if (!property_exists($rob, 'Success')) {
-
+            if ( (!is_object($rob)) || (!property_exists($rob, 'Success')) ) {
+var_dump($rob);
+exit();
                 $this->somethingWentWrong("Error registering with P4M : No 'Success' property of response received");
 
             } elseif (!$rob->Success) {

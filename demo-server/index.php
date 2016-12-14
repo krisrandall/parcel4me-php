@@ -61,6 +61,14 @@
             $user->first = 'First';
             $user->last  = 'Last';
             $user->email = 'new_person@mailinator.com';
+/*
+            
+            $p4m_address = new P4M\Models\Address();
+            $p4m_address->AddressType   = 'Address';
+            $p4m_address->Street1       = '21 Pine Street';
+            $p4m_address->State         = 'Qld';
+            $p4m_address->CountryCode   = 'AU';
+*/         
 
             // Convert the user from the shopping cart DB into a 
             // P4M Consumer
@@ -68,6 +76,8 @@
             $consumer->GivenName  = $user->first;
             $consumer->FamilyName = $user->last;
             $consumer->Email      = $user->email;
+   //         $consumer->Addresses  = array ( $p4m_address ); 
+
             return $consumer;
         }
 
