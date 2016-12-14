@@ -48,12 +48,12 @@ abstract class P4M_Shop implements P4M_Shop_Interface
 
         $clientCredentials = false;
 
-        // shm_remove(\shm_attach(SHM_IDENTIFIER)); // DEBUGGING ONLY !
+        shm_remove(\shm_attach(SHM_IDENTIFIER)); // Until we code it to expire the token, request a new one every time !
 
         // do we have a stored client ?
         if (\shm_has_var(\shm_attach(SHM_IDENTIFIER), SHM_ClientCredentialsToken)) {
             // is it about to expire ?
-            // TODO - check expiry of token
+            /* TODO - check expiry of token "expires_in" .. but need to also save token fetched time */
             $clientCredentials = \shm_get_var(\shm_attach(SHM_IDENTIFIER), SHM_ClientCredentialsToken);
         }
    
@@ -65,8 +65,10 @@ abstract class P4M_Shop implements P4M_Shop_Interface
                                              Settings::getPublic('OpenIdConnect:ClientSecret') );
             $oidc->providerConfigParam(array('token_endpoint'=>P4M_Shop_Urls::endPoint('connect_token')));
             $oidc->addScope('p4mRetail');
+            $oidc->addScope('p4mApi');
 
             $clientCredentials = $oidc->requestClientCredentialsToken();
+
 
             // check that it has the properties "access_token" and "token_type"
             if ( (!property_exists($clientCredentials, 'token_type')) ||
@@ -87,13 +89,14 @@ abstract class P4M_Shop implements P4M_Shop_Interface
 
         $consumer = $this->getConsumerFromCurrentUser();
 
+
         $cart = $this->getCartOfCurrentUser();
 
 
         $consumerAndCartMessage = json_encode( array (
 
-                'Consumer'  => $consumer,
-                'Cart'      => $cart
+                'Consumer'  =>  $consumer,
+                'Cart'      =>  $cart
 
         ));
 
@@ -108,7 +111,8 @@ abstract class P4M_Shop implements P4M_Shop_Interface
             CURLOPT_HTTPHEADER      => array(
                                             'Authorization' => $clientCredentials->token_type . ' ' . 
                                                                $clientCredentials->access_token,
-                                            'Accept'        => 'application/json'
+                                            'Accept'        => 'application/json',
+                                            'Content-Type'  => 'application/json'
                                         )
         ));
 
@@ -117,15 +121,25 @@ abstract class P4M_Shop implements P4M_Shop_Interface
         $resp = curl_exec($curl);
         $information = curl_getinfo($curl);
 
-        // Close request to clear up some resources
-        curl_close($curl);
 
+echo $consumerAndCartMessage;
+echo '<hr>';
+        echo '<b>';
+        echo P4M_Shop_Urls::endPoint('registerConsumer');
+        echo '</b><br>';
+        echo $clientCredentials->token_type . '  ' .$clientCredentials->access_token;
+echo '<hr>';
 
         echo $resp;
         echo '<pre>';
         var_dump($information);
         echo '</pre>';
+echo '<br>';
+var_dump($clientCredentials);
 
+
+        // Close request to clear up some resources
+        curl_close($curl);
     }
 
 
