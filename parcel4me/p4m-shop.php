@@ -137,8 +137,7 @@ abstract class P4M_Shop implements P4M_Shop_Interface
             $rob = json_decode($response);
 
             if ( (!is_object($rob)) || (!property_exists($rob, 'Success')) ) {
-var_dump($rob);
-exit();
+
                 $this->somethingWentWrong("Error registering with P4M : No 'Success' property of response received");
 
             } elseif (!$rob->Success) {

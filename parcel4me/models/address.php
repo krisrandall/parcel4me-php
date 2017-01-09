@@ -30,7 +30,7 @@ class Address
     public  $Longitude	    = 0.0;
     private $DropPointProviderId;   /*	Integer (read only)	Assigned */
     private $DropPointId;           /* 	 (read only)	Assigned */
-    public  $CollectPrefOrder;      /*	Integer	Stores the preferred order for "Collect" addresses */
+    private $CollectPrefOrder;      /*	(should be read only) Integer	Stores the preferred order for "Collect" addresses */
 
 
     public function __get($property) {
