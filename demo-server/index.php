@@ -68,7 +68,7 @@
             $p4m_address->Street1       = '21 Pine Street';
             $p4m_address->State         = 'Qld';
             $p4m_address->CountryCode   = 'AU';
-
+            $p4m_address->removeNullProperties();
 
             // Convert the user from the shopping cart DB into a 
             // P4M Consumer
@@ -77,7 +77,7 @@
             $consumer->FamilyName = $user->last;
             $consumer->Email      = $user->email;
             $consumer->Addresses  = array ( $p4m_address ); 
-
+            $consumer->removeNullProperties();
 
             return $consumer;
         }

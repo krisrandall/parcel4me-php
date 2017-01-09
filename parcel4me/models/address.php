@@ -1,18 +1,19 @@
 <?php
 
 namespace P4M\Models;
+require_once 'p4m-model.php';
 
 /* 
 
     Address
 
     see : http://developer.parcelfor.me/docs/documentation/api-integration/models/address/
+
 */
-class Address
+class Address extends P4mModel
 {
 
-
-    private $ConsumerId;            /* (read only)	 */
+    public  $ConsumerId;            /* (read only)	 */
     public  $Id;                    /*  must be unique for each address for the consumer. If not assigned when added it will be assigned by P4M */
     public  $AddressType;           /*		"Address" or "Collect" */
     public  $Label;                 /*		e.g. Home, Work, etc */
@@ -26,25 +27,11 @@ class Address
     public  $CountryCode;            /* ISO country code e.g. "UK", "US", "FR", etc */
     public  $Contact;               /*	Name of best contact person at address */
     public  $Phone;                 /* Phone at address or mobile of contact person */
-    public  $Latitude	    = 0.0;	 
-    public  $Longitude	    = 0.0;
-    private $DropPointProviderId;   /*	Integer (read only)	Assigned */
-    private $DropPointId;           /* 	 (read only)	Assigned */
-    private $CollectPrefOrder;      /*	(should be read only) Integer	Stores the preferred order for "Collect" addresses */
-
-
-    public function __get($property) {
-        if (property_exists($this, $property)) {
-            return $this->$property;
-        }
-    }
-
-    public function __set($property, $value) {
-        if (property_exists($this, $property)) {
-            $this->$property = $value;
-        }
-        return $this;
-    }
+    public  $Latitude;	   
+    public  $Longitude;	 
+    public  $DropPointProviderId;   /*	Integer (read only)	Assigned */
+    public  $DropPointId;           /* 	 (read only)	Assigned */
+    public  $CollectPrefOrder;      /*	(should be read only) Integer	Stores the preferred order for "Collect" addresses */
 
 }
 
