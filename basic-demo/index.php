@@ -1,3 +1,14 @@
+<head>
+    <title>P4M Shell</title>
+
+    <script src="./basic-demo/lib/webcomponentsjs/webcomponents.min.js"></script>
+    <link rel="import" href="./basic-demo/lib/p4m-widgets/p4m-login/p4m-login.html" />
+
+    <link rel="import" href="./basic-demo/lib/p4m-widgets/p4m-register/p4m-register.html">
+
+</head>
+
+
 <?php 
 
     // Require composer autoloader
@@ -153,9 +164,13 @@
         }
         echo '</ul>';
 
-        echo '<h1>Cart UI P4M widgets :</h1>';
-        echo 'todo..';
+        echo '<hr/>
+              <h1>Cart UI P4M widgets </h1>';
         
+        echo '<h2>p4m-register</h2>
+                <p4m-register></p4m-register>
+              <br/>';
+
     });
 
 

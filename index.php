@@ -3,10 +3,10 @@
     /*
 
     We have the server at this level so that the 'parcel4me' package is accessable to 
-    the 'demo-server' application
+    the 'basic-demo' application
     
     */
     
-    require('./demo-server/index.php');
+    require('./basic-demo/index.php');
 
 ?>
