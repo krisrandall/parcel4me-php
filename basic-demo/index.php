@@ -154,9 +154,11 @@
                 '/p4m/getP4MAccessToken',
                 '/error/(message)'
         );
-        echo '<h1>p4m-server</h1>
-             <p>Try these routes:<p>
-             <ul>';
+        echo '<h1>p4m-server API</h1>
+              These end points must be implemented in a shopping cart for it to use the Parcel4Me one-click checkout and delivery.
+
+              <p><p>
+              <ul>';
         foreach($supportedEndPoints as $endPoint) {
             echo '<li>
                    <a href="'.$endPoint.'">'.$endPoint.'</a>
@@ -165,7 +167,8 @@
         echo '</ul>';
 
         echo '<hr/>
-              <h1>Cart UI P4M widgets </h1>';
+              <h1>Cart UI P4M widgets </h1>
+              These UI Widgets should be added to a shopping cart in the approprate places';
         
         echo '<h2>p4m-register</h2>
                 <p4m-register></p4m-register>
