@@ -24,7 +24,7 @@ TODO :  (some implementations, and then list them here) !!
 
 ## API to Implement
 
-The following methods must be implemented bring the Parcel4Me functionality into an existing shopping cart :
+The following methods must be implemented to bring the Parcel4Me functionality into an existing shopping cart :
 
 
 ### p4m-login Widget

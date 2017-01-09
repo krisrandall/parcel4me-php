@@ -192,13 +192,32 @@ var_dump($clientCredentials);
 
 
     public function getP4MAccessToken() {
+        // http://developer.parcelfor.me/docs/documentation/parcel-for-me-widgets/p4m-login-widget/getp4maccesstoken/#
 
-        echo "test!";
-        /*
+        if ($_COOKIE["p4mState"] != $_REQUEST['state']) {
+            $this->somethingWentWrong('Authentication error (p4mState)');
+        }
 
-        TO DO : http://developer.parcelfor.me/docs/documentation/parcel-for-me-widgets/p4m-login-widget/getp4maccesstoken/#
+        
+/*
+
+response = request_OIDC_Access_Token(
+               "https://{test/live}.parcelfor.me:44333/connect/token",
+               [host]ClientId, 
+               [host]ClientSecret, 
+               [host]callbackUrl,
+               [param]code)
+
+if response.hasHttpError or 
+   not validate_JSON_Web_Token(response.IdentityToken, cookie["p4mNonce"])
+       return "<html><body>Error: {error}</body></html>"
+
+cookie["p4mToken"].value = response.AccessToken
+cookie["p4mToken"].expires = (now + 1 year)
+return "<script>window.close();</script>"
 
         */
+
     }
 
 }

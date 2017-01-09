@@ -2,8 +2,8 @@
     <title>P4M Shell</title>
 
     <script src="./basic-demo/lib/webcomponentsjs/webcomponents.min.js"></script>
-    <link rel="import" href="./basic-demo/lib/p4m-widgets/p4m-login/p4m-login.html" />
 
+    <link rel="import" href="./basic-demo/lib/p4m-widgets/p4m-login/p4m-login.html" />
     <link rel="import" href="./basic-demo/lib/p4m-widgets/p4m-register/p4m-register.html">
 
 </head>
@@ -51,6 +51,7 @@
     P4M\Settings::setPublic('OpenIdConnect:ClientId',     '10004');
     P4M\Settings::setPublic('OpenIdConnect:ClientSecret', 'secret');
     P4M\Settings::setPublic('OpenIdConnect:RedirectUrl',  'http://localhost:8000/p4m/getP4MAccessToken');
+
 
 
     // This is a bare bones demo implementation,
@@ -103,6 +104,8 @@
             // Convert the shopping cart from the shopping cart DB into a 
             // P4M Cart
             $cart = new P4M\Models\Cart();
+            $cart->removeNullProperties();
+            
             return $cart;
         }
 
@@ -171,8 +174,17 @@
               These UI Widgets should be added to a shopping cart in the approprate places';
         
         echo '<h2>p4m-register</h2>
-                <p4m-register></p4m-register>
+              <p4m-register></p4m-register>
               <br/>';
+
+        echo '<h2>p4m-login</h2>
+              <p4m-login id-srv-url="'.   ID_SERVER .'" 
+                         client-id="'.    P4M\Settings::getPublic('OpenIdConnect:ClientId') .'" 
+                         redirect-url="'. P4M\Settings::getPublic('OpenIdConnect:RedirectUrl') .'" 
+                         logout-form="logoutForm">
+              </p4m-login>
+              <br/>';
+
 
     });
 

@@ -1,6 +1,7 @@
 <?php
 
 namespace P4M\Models;
+require_once 'p4m-model.php';
 
 /* 
 
@@ -8,14 +9,14 @@ namespace P4M\Models;
 
     see : http://developer.parcelfor.me/docs/documentation/api-integration/models/cart/
 */
-class Cart
+class Cart extends P4mModel
 {
 
-    private $ConsumerId;              /* (read only) */
-    private $Id;                      /* (read only) */
+    public  $ConsumerId;              /* (read only) */
+    public  $Id;                      /* (read only) */
     public  $SessionId;               /* Consumer's session Id on retailer's site */
-    private $RetailerId;              /* (read only) */
-    private $RetailerName;            /* (read only) */
+    public  $RetailerId;              /* (read only) */
+    public  $RetailerName;            /* (read only) */
     public  $Reference;               /* Retailer reference (usually order no.) */
     public  $AddressId;               /* must be the Id of an existing consumer address or collection point, unless the consumer has selected a new collection point, in which case calls to the API must indicate this, and the new collection point details must be passed during the purchase call */
     public  $BillingAddressId;        /* must be the Id of an existing consumer address, not a collection point */
@@ -36,25 +37,11 @@ class Cart
     public  $CarrierRating          = 0;
     public  $PaymentType;             /* set to "DB" (Debit) to collect payment with purchase. Set to "PA" (payment authorisation) to authorise the purchase only, in which case the payment must be processed later via a back office "capture". */
     public  $PayMethodId;             /* The selected card token used for payment */
-    private $PaymentId;               /* (read only)	 P4M transaction Id */
-    private $AuthCode;                /* (read only)	 Used in back office transactions */
-    private $PurchaseConfirmedTS;     /* (read only)	 Date and time purchased was confirmed by the PSP */
+    public  $PaymentId;               /* (read only)	 P4M transaction Id */
+    public  $AuthCode;                /* (read only)	 Used in back office transactions */
+    public  $PurchaseConfirmedTS;     /* (read only)	 Date and time purchased was confirmed by the PSP */
     public  $Items;                 // = [];	                /* List (CartItems) */
     public  $Dicounts;              // = [];                /* List (Discounts)	*/
-
-
-    public function __get($property) {
-        if (property_exists($this, $property)) {
-            return $this->$property;
-        }
-    }
-
-    public function __set($property, $value) {
-        if (property_exists($this, $property)) {
-            $this->$property = $value;
-        }
-        return $this;
-    }
 
 }
 
