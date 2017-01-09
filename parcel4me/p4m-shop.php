@@ -142,12 +142,30 @@ abstract class P4M_Shop implements P4M_Shop_Interface
 
             } elseif (!$rob->Success) {
 
+/*
+TODO :
+
+if (registerResult.Error.Contains("registered"))
+      redirectUrl = idSrvUiUrl+"alreadyRegistered?firstName={consumer.GivenName}&email={consumer.Email}"
+      Redirect(redirectUrl)
+else
+
+*/
+
                 $this->somethingWentWrong("Error registering with P4M : " . $rob->Error);
 
             } else {
 
                 echo "HOORAY!!";
                 echo $response;
+
+/*
+TODO :
+
+    redirectUrl = idSrvUiUrl+"registerConsumer/{registerResult.ConsumerId}"
+    Redirect(redirectUrl)
+
+*/
 
             }
         }
