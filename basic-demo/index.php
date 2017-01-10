@@ -1,5 +1,5 @@
 <head>
-    <title>P4M Shell</title>
+    <title>P4M Stub</title>
 
     <script src="./basic-demo/lib/webcomponentsjs/webcomponents.min.js"></script>
 
@@ -105,7 +105,7 @@
             // P4M Cart
             $cart = new P4M\Models\Cart();
             $cart->removeNullProperties();
-            
+
             return $cart;
         }
 
@@ -158,7 +158,7 @@
                 '/error/(message)'
         );
         echo '<h1>p4m-server API</h1>
-              These end points must be implemented in a shopping cart for it to use the Parcel4Me one-click checkout and delivery.
+              These end points must be implemented in a shopping cart for it to use the Parcel4Me one-click checkout and delivery
 
               <p><p>
               <ul>';
@@ -178,7 +178,7 @@
               <br/>';
 
         echo '<h2>p4m-login</h2>
-              <p4m-login id-srv-url="'.   ID_SERVER .'" 
+              <p4m-login id-srv-url="'.   P4M_OID_SERVER .'" 
                          client-id="'.    P4M\Settings::getPublic('OpenIdConnect:ClientId') .'" 
                          redirect-url="'. P4M\Settings::getPublic('OpenIdConnect:RedirectUrl') .'" 
                          logout-form="logoutForm">

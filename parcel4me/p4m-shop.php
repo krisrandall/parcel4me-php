@@ -48,6 +48,7 @@ abstract class P4M_Shop implements P4M_Shop_Interface
 
         $clientCredentials = false;
 
+        // TODO - check for existing token ! (see TODO a few lines down also ..)
         shm_remove(\shm_attach(SHM_IDENTIFIER)); // Until we code it to expire the token, request a new one every time !
 
         // do we have a stored client ?
@@ -77,8 +78,6 @@ abstract class P4M_Shop implements P4M_Shop_Interface
                 $this->somethingWentWrong('Invalid OAUTH2 Client Credentials returned :'.json_encode($clientCredentials));
             }
                  
-            /* TODO : check the token is valid */
-            //\Firebase\JWT\JWT::decode($clientCredentials->access_token, ** need to get key from OAUTH2 end point **, array('HS256'));
 
             \shm_put_var(\shm_attach(SHM_IDENTIFIER), SHM_ClientCredentialsToken, $clientCredentials);
 
@@ -88,10 +87,7 @@ abstract class P4M_Shop implements P4M_Shop_Interface
         // Get the data to send to signup this consumer 
 
         $consumer = $this->getConsumerFromCurrentUser();
-
-
         $cart = $this->getCartOfCurrentUser();
-
 
         $consumerAndCartMessage = json_encode( array (
 
@@ -198,25 +194,36 @@ var_dump($clientCredentials);
             $this->somethingWentWrong('Authentication error (p4mState)');
         }
 
+        try {
+            $oidc = new \OpenIDConnectClient(P4M_Shop_Urls::endPoint('connect_token'),
+                                            Settings::getPublic('OpenIdConnect:ClientId'),
+                                            Settings::getPublic('OpenIdConnect:ClientSecret') );
+            $oidc->providerConfigParam(array('token_endpoint'=>P4M_Shop_Urls::endPoint('connect_token')));
+            $oidc->providerConfigParam(array('jwks_uri'=>P4M_Shop_Urls::endPoint('jwks')));
+            $oidc->setProviderURL(P4M_OID_SERVER);
         
-/*
+            $response = $oidc->authenticate();
 
-response = request_OIDC_Access_Token(
-               "https://{test/live}.parcelfor.me:44333/connect/token",
-               [host]ClientId, 
-               [host]ClientSecret, 
-               [host]callbackUrl,
-               [param]code)
+            if (!$response) {
+                $this->somethingWentWrong('OIDC auth returned false');
+            }
 
-if response.hasHttpError or 
-   not validate_JSON_Web_Token(response.IdentityToken, cookie["p4mNonce"])
-       return "<html><body>Error: {error}</body></html>"
+        } catch (\OpenIDConnectClientException $oidcE) {
+            $this->somethingWentWrong('OIDC Exception :'.$oidcE->getMessage());
+        } catch (\Exception $e) {
+            $this->somethingWentWrong('Exception doing OIDC auth:'.$e->getMessage());
+        }
 
-cookie["p4mToken"].value = response.AccessToken
-cookie["p4mToken"].expires = (now + 1 year)
-return "<script>window.close();</script>"
+        // set the p4m cookie for this retailer's site
+        $accessToken  = $oidc->getAccessToken();
+        $cookieExpire = strtotime('+1 years');
+        setcookie( "p4mToken",
+                   $accessToken,
+                   $cookieExpire );
 
-        */
+            
+        // close this popped up window
+        echo '<script>window.close();</script>';
 
     }
 

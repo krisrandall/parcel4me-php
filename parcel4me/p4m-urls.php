@@ -10,13 +10,14 @@ class P4M_Shop_Urls
 
     private static $endPoints = array(
 
-                'oauth2_base_url'           => ID_SERVER,
-                'signup'                    => ID_SERVER . '/ui/signup',
-                'connect_token'             => ID_SERVER . '/connect/token',
-                'authorize'                 => ID_SERVER . '/connect/authorize',
-                'logout'                    => ID_SERVER . '/connect/endsession',
+                'oauth2_base_url'           => P4M_OID_SERVER,
+                'signup'                    => P4M_OID_SERVER . '/ui/signup',
+                'connect_token'             => P4M_OID_SERVER . '/connect/token',
+                'authorize'                 => P4M_OID_SERVER . '/connect/authorize',
+                'logout'                    => P4M_OID_SERVER . '/connect/endsession',
+                'jwks'                      => P4M_OID_SERVER . '/.well-known/openid-configuration/jwks',
 
-                'registerConsumer'         => API_SERVER . '/registerConsumer'
+                'registerConsumer'          => P4M_API_SERVER . '/registerConsumer'
                 
 
     );

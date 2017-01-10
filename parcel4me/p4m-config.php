@@ -7,14 +7,14 @@
     
 */
 
-define("ENV_MODE", "dev");
+define("P4M_ENV_MODE", "dev");
 
-define("SRV_PORT", "44333");
-define("API_PORT", "44321");
+define("P4M_SRV_PORT", "44333");
+define("P4M_API_PORT", "44321");
 
-define("BASE_SERVER", 'https://'.ENV_MODE.'.parcelfor.me');
+define("P4M_BASE_SERVER", 'https://'.P4M_ENV_MODE.'.parcelfor.me');
 
-define("ID_SERVER",  BASE_SERVER . ':' . SRV_PORT);
-define("API_SERVER", BASE_SERVER . ':' . API_PORT . '/api/v2');
+define("P4M_OID_SERVER", P4M_BASE_SERVER . ':' . P4M_SRV_PORT);
+define("P4M_API_SERVER", P4M_BASE_SERVER . ':' . P4M_API_PORT . '/api/v2');
 
 ?>
