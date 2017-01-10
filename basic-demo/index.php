@@ -155,6 +155,7 @@
         $supportedEndPoints = array( 
                 '/p4m/signup',
                 '/p4m/getP4MAccessToken',
+                '/p4m/isLocallyLoggedIn',
                 '/error/(message)'
         );
         echo '<h1>p4m-server API</h1>
@@ -201,13 +202,13 @@
 
         switch($p4mEndpoint) {
 
-            case 'signup' :
-                $my_shopping_cart->signUp();
-                break;
+            case 'signup' :                 $my_shopping_cart->signUp();                    break;
 
-            case 'getP4MAccessToken' :
-                $my_shopping_cart->getP4MAccessToken();
-                break;
+            case 'getP4MAccessToken' :      $my_shopping_cart->getP4MAccessToken();         break;
+
+            case 'isLocallyLoggedIn' :      $my_shopping_cart->isLocallyLoggedIn();         break;
+                
+
 
             default:
                 echo 'Hello unhandled endpoint : ' . htmlentities($p4mEndpoint);

@@ -34,7 +34,6 @@ abstract class P4M_Shop implements P4M_Shop_Interface
 
 
     public function signUp() {
-        // PHP version of this psuedo code :
         // http://developer.parcelfor.me/docs/documentation/parcel-for-me-widgets/p4m-register-widget/signup/
 
         if (!$this->userIsLoggedIn()) {
@@ -228,6 +227,32 @@ var_dump($clientCredentials);
         echo '<script>window.close();</script>';
 
     }
+
+
+    public function isLocallyLoggedIn() {
+        // http://developer.parcelfor.me/docs/documentation/parcel-for-me-widgets/p4m-login-widget/islocallyloggedin/
+
+        if ($this->userIsLoggedIn()) {
+            
+            setcookie( "p4mLocalLogin",
+                       true,
+                       0,
+                       '/' );
+            echo "{ 'Success': true, 'Error': null }";
+
+        } else {
+
+            setcookie( "p4mLocalLogin",
+                       false,
+                       0,
+                       '/' );
+            echo "{ 'Success': false, 'Error': 'Not logged in' }";
+
+        }
+
+    }
+
+
 
 }
 
