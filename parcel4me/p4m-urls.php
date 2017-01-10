@@ -17,7 +17,9 @@ class P4M_Shop_Urls
                 'logout'                    => P4M_OID_SERVER . '/connect/endsession',
                 'jwks'                      => P4M_OID_SERVER . '/.well-known/openid-configuration/jwks',
 
-                'registerConsumer'          => P4M_API_SERVER . '/registerConsumer'
+                'registerConsumer'          => P4M_API_SERVER . '/registerConsumer',
+                'consumer'                  => P4M_API_SERVER . '/consumer',
+                'consumerExtras'            => P4M_API_SERVER . '/consumerExtras'
                 
 
     );

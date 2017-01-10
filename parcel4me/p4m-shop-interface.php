@@ -5,16 +5,42 @@ namespace P4M;
 interface P4M_Shop_Interface {
     
     /**
-        return true if the user is logged onto your shopping cart, else false
+        return currently logged on user if the user is logged into the shopping cart system, else false
     */
     public function userIsLoggedIn();
+
+
+    /**
+        create a new local user in the shopping cart DB and return the new local user object, else throw error
+    */
+    public function createNewUser( $p4m_consumer );
+
+
+    /**
+        do the local (ie. as per shopping cart logic) login process for this user 
+    */
+    public function loginUser( $localUserId );
+
+
+    /**
+        do the local logout process for the currently logged on user
+    */
+    public function logoutCurrentUser();
+
+
+    /**
+        set the local user details based on the p4m consumer object 
+    */
+    public function setCurrentUserDetails( $p4m_consumer );
+
 
     /**
         return a populated consumer JSON object as defined by the model :
         http://developer.parcelfor.me/docs/documentation/api-integration/models/consumer/
     */
     public function getConsumerFromCurrentUser();
-    
+
+
     /**
         return the users current shopping cart as a JSON object as defined here :
         http://developer.parcelfor.me/docs/documentation/api-integration/models/cart/
@@ -26,12 +52,10 @@ interface P4M_Shop_Interface {
         return a URL to redirect to show the user an error when attempting to register them
         pass in an error message
     */
-    public function localErrorPageUrl($message);
+    public function localErrorPageUrl( $message );
 
 
 }
-
-
 
 
 ?>

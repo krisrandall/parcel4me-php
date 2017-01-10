@@ -32,6 +32,66 @@ abstract class P4M_Shop implements P4M_Shop_Interface
         exit();  
     }
 
+    private $bearerToken;
+    private function setBearerToken($token) {
+        $this->bearerToken = $token;
+    }
+
+
+    private function apiHttp($method, $endpoint, $data = null) {
+        /*
+        This does an HTTP request to the API, and calls somethingWentWrong() if the result does not contain a .Success property 
+        It passes $this->$bearerToken as the auth header bearer token so call setBearerToken() first
+        */
+
+        $curl = curl_init();
+
+        curl_setopt_array($curl, array(
+            // CURLOPT_PORT => "44321",
+            CURLOPT_URL => $endpoint,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => "",
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_TIMEOUT => 30,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => $method,
+            CURLOPT_POSTFIELDS => $data,
+            CURLOPT_HTTPHEADER => array(
+                "accept: application/json",
+                "authorization: " . 'Bearer ' . $this->bearerToken,
+                "cache-control: no-cache",
+                "content-type: application/json"
+            )
+        ));
+
+        $response = curl_exec($curl);
+        $err = curl_error($curl);
+
+        curl_close($curl);
+
+        if ($err) {
+            $this->somethingWentWrong("Error calling API : # " . $err . " <!-- ".$endpoint." -->");
+        } elseif ($response=='') {
+            $this->somethingWentWrong("Error calling API : returned blank (token could be expired)");
+        } else {
+
+            $rob = new \stdClass();
+            $rob = json_decode($response);
+
+            if ( (!is_object($rob)) || (!property_exists($rob, 'Success')) ) {
+                $this->somethingWentWrong("Error calling API : No 'Success' property of response received");
+            } 
+
+        }
+
+        // if we are here then the response has a .Success property, 
+        // the calling function can check that and handle true or false success results
+
+        return $rob; // return the response as an object  
+
+    }
+
+
 
     public function signUp() {
         // http://developer.parcelfor.me/docs/documentation/parcel-for-me-widgets/p4m-register-widget/signup/
@@ -84,104 +144,46 @@ abstract class P4M_Shop implements P4M_Shop_Interface
 
 
         // Get the data to send to signup this consumer 
-
         $consumer = $this->getConsumerFromCurrentUser();
-        $cart = $this->getCartOfCurrentUser();
-
+        $cart     = $this->getCartOfCurrentUser();
         $consumerAndCartMessage = json_encode( array (
-
                 'Consumer'  =>  $consumer,
                 'Cart'      =>  $cart
-
         ));
 
 
         // Send the API request 
+        $this->setBearerToken($clientCredentials->access_token);
+        $rob = $this->apiHttp('POST',  P4M_Shop_Urls::endPoint('registerConsumer'), $consumerAndCartMessage);
 
-        $curl = curl_init();
+        if (!$rob->Success) {
 
-        curl_setopt_array($curl, array(
-            // CURLOPT_PORT => "44321",
-            CURLOPT_URL => P4M_Shop_Urls::endPoint('registerConsumer'),
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_ENCODING => "",
-            CURLOPT_MAXREDIRS => 10,
-            CURLOPT_TIMEOUT => 30,
-            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-            CURLOPT_CUSTOMREQUEST => "POST",
-            CURLOPT_POSTFIELDS => $consumerAndCartMessage,
-            CURLOPT_HTTPHEADER => array(
-                "accept: application/json",
-                "authorization: " . $clientCredentials->token_type . ' ' . 
-                                    $clientCredentials->access_token,
-                "cache-control: no-cache",
-                "content-type: application/json"
-            )
-        ));
+            /*
+            TODO :
 
-        $response = curl_exec($curl);
-        $err = curl_error($curl);
+            if (registerResult.Error.Contains("registered"))
+                redirectUrl = idSrvUiUrl+"alreadyRegistered?firstName={consumer.GivenName}&email={consumer.Email}"
+                Redirect(redirectUrl)
+            else
 
-        curl_close($curl);
+            */
 
-        if ($err) {
-            $this->somethingWentWrong("cURL Error #:" . $err);
+            $this->somethingWentWrong("Error registering with P4M : " . $rob->Error);
+
         } else {
 
-            $rob = new \stdClass();
-            $rob = json_decode($response);
+            echo "HOORAY!!";
+            echo $response;
 
-            if ( (!is_object($rob)) || (!property_exists($rob, 'Success')) ) {
+            /*
+            TODO :
 
-                $this->somethingWentWrong("Error registering with P4M : No 'Success' property of response received");
+                redirectUrl = idSrvUiUrl+"registerConsumer/{registerResult.ConsumerId}"
+                Redirect(redirectUrl)
 
-            } elseif (!$rob->Success) {
-
-/*
-TODO :
-
-if (registerResult.Error.Contains("registered"))
-      redirectUrl = idSrvUiUrl+"alreadyRegistered?firstName={consumer.GivenName}&email={consumer.Email}"
-      Redirect(redirectUrl)
-else
-
-*/
-
-                $this->somethingWentWrong("Error registering with P4M : " . $rob->Error);
-
-            } else {
-
-                echo "HOORAY!!";
-                echo $response;
-
-/*
-TODO :
-
-    redirectUrl = idSrvUiUrl+"registerConsumer/{registerResult.ConsumerId}"
-    Redirect(redirectUrl)
-
-*/
+            */
 
             }
-        }
-
-
-/*
-echo $consumerAndCartMessage;
-echo '<hr>';
-        echo '<b>';
-        echo P4M_Shop_Urls::endPoint('registerConsumer');
-        echo '</b><br>';
-        echo $clientCredentials->token_type . '  ' .$clientCredentials->access_token;
-echo '<hr>';
-
-        echo $resp;
-        echo '<pre>';
-        var_dump($information);
-        echo '</pre>';
-echo '<br>';
-var_dump($clientCredentials);
-*/
 
     }
 
@@ -249,6 +251,94 @@ var_dump($clientCredentials);
             echo "{ 'Success': false, 'Error': 'Not logged in' }";
 
         }
+
+    }
+
+
+    public function localLogin() {
+        // http://developer.parcelfor.me/docs/documentation/parcel-for-me-widgets/p4m-login-widget/locallogin/
+
+        setcookie( "p4mLocalLogin", false, 0, '/' );
+
+        // Send the API request 
+        $this->setBearerToken($_COOKIE["p4mToken"]);
+        $rob = $this->apiHttp('GET',  P4M_Shop_Urls::endPoint('consumer'));
+
+        if (!$rob->Success) {
+            $this->somethingWentWrong('Unsuccessful fetching consumer: '.$rob->Error);
+        } else {
+
+            $consumer = $rob->Consumer;
+
+            if ($consumer) {
+
+                $cookieExpire = strtotime('+1 years');
+                $path         = '/';
+
+                setcookie( "p4mAvatarUrl",              $consumer->ProfilePicUrl,                       $cookieExpire, $path );
+                setcookie( "p4mGivenName",              $consumer->GivenName,                           $cookieExpire, $path );
+                setcookie( "p4mOfferCartRestore",       ( $rob->HasOpenCart ? "true" : "false" ),       $cookieExpire, $path );
+                setcookie( "p4mLocalLogin",             "true",                                         $cookieExpire, $path );
+                if (isset($consumer->PrefDeliveryAddress)) {
+                    setcookie( "p4mDefaultPostCode",        $consumer->PrefDeliveryAddress->PostCode,       $cookieExpire, $path );
+                    setcookie( "p4mDefaultCountryCode",     $consumer->PrefDeliveryAddress->CountryCode,    $cookieExpire, $path );
+                }
+
+            }
+
+
+            /*
+                Handle these possible scenereos 
+                     Local User	    P4M User	                Action
+                1	 Not logged in	Has no local Id 	        Create and login a new local user using the P4M details
+                                                                Store the local Id in P4M Consumer.Extras["LocalId"]
+                2	 Not logged in	Has a local Id 	            Login using the P4M local Id, update local details 
+                3	 Logged in	    Has no local Id 	        Logout current user, proceed for 1
+                4	 Logged in	    Has a different local Id 	Logout current user, proceed for 2 
+                5	 Logged in	    Has matching local Id 	    Update local details from P4M if required 
+            */
+
+            $hasLocalId = ( isset($consumer->Extras) && isset($consumer->Extras->LocalId) && $consumer->Extras->LocalId);
+            $loggedInUser = $this->userIsLoggedIn();
+            if (!$loggedInUser) {
+
+                if (!$hasLocalId) {
+                    // case 1 
+                    $extraDetails = $this->createNewUser($consumer); 
+                    if (!isset($extraDetails->id)) throw new \Exception('No "id" field on local user');
+                    $extraDetails->LocalId = $extraDetails->id;
+                    $rob = $this->apiHttp('POST',  P4M_Shop_Urls::endPoint('consumerExtras'),  $extraDetails);
+                } else {
+                    // case 2 
+                    $this->loginUser( $consumer->Extras->LocalId );
+                }
+
+            } else {
+
+                if (!$hasLocalId) {
+                    // case 3
+                    $this->logoutCurrentUser();
+                    $extraDetails = $this->createNewUser($consumer); 
+                    if (!isset($extraDetails->id)) throw new \Exception('No "id" field on local user');
+                    $extraDetails->LocalId = $extraDetails->id;
+                    $rob = $this->apiHttp('POST',  P4M_Shop_Urls::endPoint('consumerExtras'),  $extraDetails);
+                } elseif ( $consumer->Extras->LocalId != $loggedInUser->id ) {
+                    // case 4
+                    $this->logoutCurrentUser();
+                    $this->loginUser( $consumer->Extras->LocalId );
+                } else {
+                    // case 5
+                    $this->setCurrentUserDetails( $consumer );
+                }
+
+            }
+
+
+            // optionally set RedirectUrl
+            echo "{ 'RedirectUrl': null, 'Success': true, 'Error': null }";
+
+        }
+
 
     }
 

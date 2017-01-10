@@ -1,14 +1,3 @@
-<head>
-    <title>P4M Stub</title>
-
-    <script src="./basic-demo/lib/webcomponentsjs/webcomponents.min.js"></script>
-
-    <link rel="import" href="./basic-demo/lib/p4m-widgets/p4m-login/p4m-login.html" />
-    <link rel="import" href="./basic-demo/lib/p4m-widgets/p4m-register/p4m-register.html">
-
-</head>
-
-
 <?php 
 
     // Require composer autoloader
@@ -59,10 +48,47 @@
 
     class DemoShop extends P4M\P4M_Shop {
 
+
         function userIsLoggedIn() {
             //return false;
             return true;
         }
+
+        function createNewUser( $p4m_consumer ) {
+            /*
+                logic here to create a new user record
+                in the shopping cart database
+            */
+            $user = new stdClass();
+            $user->first = 'First';
+            $user->last  = 'Last';
+            $user->email = 'new_person@mailinator.com';
+            $user->id    = 1234567;
+
+            return $user;
+        }
+
+        function loginUser( $localUserId ) {
+            /*
+                logic to log the user out of the shopping cart 
+            */
+            return true;
+        }
+
+        function logoutCurrentUser() {
+            /*
+                logic to logout the current user from the shopping cart 
+            */
+            return ture;
+        }
+
+        function setCurrentUserDetails( $p4m_consumer ) {
+            /* 
+                logic to copy fields from the p4m_consumer onto the current local user 
+            */
+            return true;
+        }
+        
 
         function getConsumerFromCurrentUser() {
             /* 
@@ -113,6 +139,7 @@
             return 'http://' . $_SERVER['HTTP_HOST'] . '/error/' . urlencode($message);
         }
 
+
     }
 
 
@@ -156,8 +183,24 @@
                 '/p4m/signup',
                 '/p4m/getP4MAccessToken',
                 '/p4m/isLocallyLoggedIn',
+                '/p4m/localLogin',
                 '/error/(message)'
         );
+
+        echo '
+
+            <head>
+                <title>P4M Stub</title>
+
+                <script src="./basic-demo/lib/webcomponentsjs/webcomponents.min.js"></script>
+
+                <link rel="import" href="./basic-demo/lib/p4m-widgets/p4m-login/p4m-login.html" />
+                <link rel="import" href="./basic-demo/lib/p4m-widgets/p4m-register/p4m-register.html">
+
+            </head>
+            
+             ';
+
         echo '<h1>p4m-server API</h1>
               These end points must be implemented in a shopping cart for it to use the Parcel4Me one-click checkout and delivery
 
@@ -207,6 +250,8 @@
             case 'getP4MAccessToken' :      $my_shopping_cart->getP4MAccessToken();         break;
 
             case 'isLocallyLoggedIn' :      $my_shopping_cart->isLocallyLoggedIn();         break;
+                
+            case 'localLogin' :             $my_shopping_cart->localLogin();                break;
                 
 
 
