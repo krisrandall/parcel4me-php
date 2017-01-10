@@ -217,9 +217,11 @@ var_dump($clientCredentials);
         // set the p4m cookie for this retailer's site
         $accessToken  = $oidc->getAccessToken();
         $cookieExpire = strtotime('+1 years');
+        $path         = '/';
         setcookie( "p4mToken",
                    $accessToken,
-                   $cookieExpire );
+                   $cookieExpire,
+                   $path );
 
             
         // close this popped up window
