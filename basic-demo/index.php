@@ -241,6 +241,8 @@
     // Dynamic route: p4m/*
     $router->get('/p4m/(\w+)', function ($p4mEndpoint) {
 
+        file_put_contents('php://stderr', print_r(' - '.$p4mEndpoint, TRUE));
+
         global $my_shopping_cart;
 
         switch($p4mEndpoint) {
