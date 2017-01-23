@@ -7,9 +7,9 @@ namespace P4M\Models;
 // see : http://developer.parcelfor.me/docs/documentation/api-integration/models/overview/
 
 
-require 'models/consumer.php';
-require 'models/cart.php';
-require 'models/address.php';
+require 'model/consumer.php';
+require 'model/cart.php';
+require 'model/address.php';
 
 
 ?>
