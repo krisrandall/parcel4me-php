@@ -7,6 +7,9 @@
     require_once __DIR__.'/../parcel4me/p4m-shop.php';
 
 
+    require __DIR__.'/vendor/smarty/smarty/libs/Smarty.class.php';
+
+
     /*       
         DDDDDDDDDDDDD                                                                     
         D::::::::::::DDD                                                                  
@@ -205,47 +208,14 @@
                 '/error/(message)'
         );
 
-        echo '
+        $smarty = new Smarty;
 
-            <head>
-                <title>P4M Stub</title>
-
-                <script src="./basic-demo/lib/webcomponentsjs/webcomponents.min.js"></script>
-
-                <link rel="import" href="./basic-demo/lib/p4m-widgets/p4m-login/p4m-login.html" />
-                <link rel="import" href="./basic-demo/lib/p4m-widgets/p4m-register/p4m-register.html">
-
-            </head>
-            
-             ';
-
-        echo '<h1>p4m-server API</h1>
-              These end points must be implemented in a shopping cart for it to use the Parcel4Me one-click checkout and delivery
-
-              <p><p>
-              <ul>';
-        foreach($supportedEndPoints as $endPoint) {
-            echo '<li>
-                   <a href="'.$endPoint.'">'.$endPoint.'</a>
-                 </li>';
-        }
-        echo '</ul>';
-
-        echo '<hr/>
-              <h1>Cart UI P4M widgets </h1>
-              These UI Widgets should be added to a shopping cart in the approprate places';
+        $smarty->assign('supportedEndPoints',   $supportedEndPoints);
+        $smarty->assign('idSrvUrl',             P4M_OID_SERVER);
+        $smarty->assign('clientId',             P4M\Settings::getPublic('OpenIdConnect:ClientId'));
+        $smarty->assign('redirectUrl',          P4M\Settings::getPublic('OpenIdConnect:RedirectUrl'));
         
-        echo '<h2>p4m-register</h2>
-              <p4m-register></p4m-register>
-              <br/>';
-
-        echo '<h2>p4m-login</h2>
-              <p4m-login id-srv-url="'.   P4M_OID_SERVER .'" 
-                         client-id="'.    P4M\Settings::getPublic('OpenIdConnect:ClientId') .'" 
-                         redirect-url="'. P4M\Settings::getPublic('OpenIdConnect:RedirectUrl') .'" 
-                         logout-form="logoutForm">
-              </p4m-login>
-              <br/>';
+        $smarty->display(__DIR__.'/view/template/index.tpl');
 
 
     });

@@ -1,7 +1,6 @@
 {
     "require": {
         "krisrandall/openid-connect-with-client-credentials-php": "dev-master",
-        "firebase/php-jwt": "^4.0",
-        "smarty/smarty": "^3.1"
+        "firebase/php-jwt": "^4.0"
     }
 }

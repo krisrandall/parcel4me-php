@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "aaea3dbe99c937c6633f4a355bbb0d6b",
+    "content-hash": "b4ba883c62c4f5cdd0428ace86eaf584",
     "packages": [
         {
             "name": "bramus/router",
@@ -51,6 +51,59 @@
                 "routing"
             ],
             "time": "2016-05-26T19:40:20+00:00"
+        },
+        {
+            "name": "smarty/smarty",
+            "version": "v3.1.31",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/smarty-php/smarty.git",
+                "reference": "c7d42e4a327c402897dd587871434888fde1e7a9"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/smarty-php/smarty/zipball/c7d42e4a327c402897dd587871434888fde1e7a9",
+                "reference": "c7d42e4a327c402897dd587871434888fde1e7a9",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.2"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "3.1.x-dev"
+                }
+            },
+            "autoload": {
+                "files": [
+                    "libs/bootstrap.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "LGPL-3.0"
+            ],
+            "authors": [
+                {
+                    "name": "Monte Ohrt",
+                    "email": "monte@ohrt.com"
+                },
+                {
+                    "name": "Uwe Tews",
+                    "email": "uwe.tews@googlemail.com"
+                },
+                {
+                    "name": "Rodney Rehm",
+                    "email": "rodney.rehm@medialize.de"
+                }
+            ],
+            "description": "Smarty - the compiling PHP template engine",
+            "homepage": "http://www.smarty.net",
+            "keywords": [
+                "templating"
+            ],
+            "time": "2016-12-14T21:57:25+00:00"
         }
     ],
     "packages-dev": [],
