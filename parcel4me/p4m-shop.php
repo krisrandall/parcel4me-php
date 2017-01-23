@@ -25,9 +25,14 @@ abstract class P4M_Shop implements P4M_Shop_Interface
     abstract public function localErrorPageUrl($message);
 
 
+    public function getCurrentSessionId() {
+        // this may be overridden if the shopping cart uses a session id other than the PHP session id internally
+        return session_id();
+    }
+
 
     private function somethingWentWrong($message) {
-        //error_log("somethingWentWrong(" . $message . ") ". $this->localErrorPageUrl($message));
+        error_log("somethingWentWrong(" . $message . ") ". $this->localErrorPageUrl($message));
         header("Location: ".$this->localErrorPageUrl($message)); 
         exit();  
     }
@@ -152,7 +157,7 @@ abstract class P4M_Shop implements P4M_Shop_Interface
         ));
 
 
-        // Send the API request 
+        // Send the register consumer API request 
         $this->setBearerToken($clientCredentials->access_token);
         $rob = $this->apiHttp('POST',  P4M_Shop_Urls::endPoint('registerConsumer'), $consumerAndCartMessage);
 
@@ -240,7 +245,7 @@ abstract class P4M_Shop implements P4M_Shop_Interface
                        true,
                        0,
                        '/' );
-            echo "{ 'Success': true, 'Error': null }";
+            echo '{ "Success": true, "Error": null }';
 
         } else {
 
@@ -248,7 +253,7 @@ abstract class P4M_Shop implements P4M_Shop_Interface
                        false,
                        0,
                        '/' );
-            echo "{ 'Success': false, 'Error': 'Not logged in' }";
+            echo '{ "Success": false, "Error": "Not logged in" }';
 
         }
 
@@ -335,12 +340,45 @@ abstract class P4M_Shop implements P4M_Shop_Interface
 
 
             // optionally set RedirectUrl
-            echo "{ 'RedirectUrl': null, 'Success': true, 'Error': null }";
+            echo '{ "RedirectUrl": null, "Success": true, "Error": null }';
 
         }
 
 
     }
+
+
+    public function restoreLastCart() {
+        // http://developer.parcelfor.me/docs/documentation/parcel-for-me-widgets/p4m-login-widget/restorelastcart/
+
+
+        // Send the restoreLastCart API request 
+        // Note that this endpoint will updated the saved P4M shopping cart with the passed in session id
+        $localSessionId = $this->getCurrentSessionId();
+        $endpoint       = P4M_Shop_Urls::endPoint('restoreLastCart') . '/' . $localSessionId;
+        $this->setBearerToken($_COOKIE["p4mToken"]);
+
+        $rob = $this->apiHttp('GET', $endpoint);
+
+        if (!$rob->Success) {
+
+            echo '{"Success": false, "Error": "'.$rob->Error.'" }';
+
+        } else {
+
+            $this->setCartOfCurrentUser( $rob->Cart );
+
+            // delete the "p4mOfferCartRestore" cookie by setting it to have already expired
+            if (isset($_COOKIE['p4mOfferCartRestore'])) {
+                setcookie( "p4mOfferCartRestore", null, -1, '/');
+            }
+
+            echo  '{"Success": true, "Error": null }';
+
+        }
+
+    }
+
 
 
 

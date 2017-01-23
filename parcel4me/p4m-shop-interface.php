@@ -49,6 +49,15 @@ interface P4M_Shop_Interface {
 
 
     /**
+        set the local shopping cart based on the p4m shopping cart details, passed in this format:
+        http://developer.parcelfor.me/docs/documentation/api-integration/models/cart/
+    */
+    public function setCartOfCurrentUser( $p4m_cart );
+
+
+
+
+    /**
         return a URL to redirect to show the user an error when attempting to register them
         pass in an error message
     */

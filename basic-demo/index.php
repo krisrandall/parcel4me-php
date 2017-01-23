@@ -42,6 +42,9 @@
     P4M\Settings::setPublic('OpenIdConnect:RedirectUrl',  'http://localhost:8000/p4m/getP4MAccessToken');
 
 
+    session_start(); // this is important for the P4M_Shop->getCurrentSessionId() to work !!
+                     // if you do not have a session, then you must override this method
+
 
     // This is a bare bones demo implementation,
     // an empty shell to be filled out for a real shopping cart
@@ -135,6 +138,20 @@
             return $cart;
         }
 
+
+        function setCartOfCurrentUser( $p4m_cart ) {
+            /* 
+                some logice goes here to set local shopping cart DB
+                based on the passed in p4m shopping cart object 
+            */
+
+            return true;
+        }
+
+
+
+
+
         function localErrorPageUrl($message) {
             return 'http://' . $_SERVER['HTTP_HOST'] . '/error/' . urlencode($message);
         }
@@ -184,6 +201,7 @@
                 '/p4m/getP4MAccessToken',
                 '/p4m/isLocallyLoggedIn',
                 '/p4m/localLogin',
+                '/p4m/restoreLastCart',
                 '/error/(message)'
         );
 
@@ -255,6 +273,8 @@
                 
             case 'localLogin' :             $my_shopping_cart->localLogin();                break;
                 
+            case 'restoreLastCart' :        $my_shopping_cart->restoreLastCart();           break;
+
 
 
             default:
