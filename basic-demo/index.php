@@ -140,13 +140,17 @@
             // P4M Cart
 
             $cartItem = new P4M\Model\CartItem();
-            $cartItem->Desc  = "A great thing I am buying";
-            $cartItem->Qty   = 1;
-            $cartItem->Price = 4.90;
+            $cartItem->Desc         = "A great thing I am buying";
+            $cartItem->Qty          = 1;
+            $cartItem->Price        = 4.90;
+            $cartItem->LinkToImage  = "http://cdn2.wpbeginner.com/wp-content/uploads/2015/12/pixabay.jpg";
             $cartItem->removeNullProperties();
 
             $cart = new P4M\Model\Cart();
-            $cart->Items = [ $cartItem ];
+            $cart->SessionId    = $this->getCurrentSessionId();
+            $cart->PaymentType  = "DB";
+            $cart->Items        = [ $cartItem ];
+            $cart->Currency     = "USD";
             $cart->removeNullProperties();
 
             return $cart;
@@ -274,6 +278,8 @@
             case 'restoreLastCart' :        $my_shopping_cart->restoreLastCart();           break;
 
             case 'checkout' :               $my_shopping_cart->checkout();                  break;
+
+            case 'getP4MCart' :             $my_shopping_cart->getP4MCart();                break;
 
 
 

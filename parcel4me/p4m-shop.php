@@ -410,9 +410,8 @@ abstract class P4M_Shop implements P4M_Shop_Interface
         if ( (!isset($currentCart->Items)) || (empty($currentCart->Items)) ) {
             $this->goHome();
         }
-if (true) {
-//20p                 if ( (!array_key_exists('gfsCheckoutToken', $_COOKIE)) || ($_COOKIE['gfsCheckoutToken']=='') ) {
 
+        if ( (!array_key_exists('gfsCheckoutToken', $_COOKIE)) || ($_COOKIE['gfsCheckoutToken']=='') ) {
 
             try {
                 $oidc = new \OpenIDConnectClient(GFS_SERVER,
@@ -436,13 +435,14 @@ if (true) {
 
 
             $accessToken  = $response->access_token;
+            $encodeToken = base64_encode($accessToken);
             $cookieExpire = strtotime('+'.$response->expires_in.' seconds');
             $path         = '/';
-            setcookie( "p4mToken",
-                    $accessToken,
+            setcookie( "gfsCheckoutToken",
+                    $encodeToken,
                     $cookieExpire,
                     $path );
-            $_COOKIE['gfsCheckoutToken'] = $accessToken;
+            $_COOKIE['gfsCheckoutToken'] = $encodeToken;
 
         }
 
@@ -460,6 +460,29 @@ if (true) {
 
     }
 
+
+    public function getP4MCart() {
+
+        $resultObject = new \stdClass();
+
+        try {
+            
+            $cartObject = $this->getCartOfCurrentUser();
+
+            $resultObject->Success = true;
+            $resultObject->Cart    = $cartObject;            
+
+        } catch (\Exception $e) {
+
+            $resultObject->Success = false;
+            $resultObject->Error   = $e->getMessage();
+        }
+
+
+        $resultJson = json_encode($resultObject, JSON_PRETTY_PRINT);
+        echo $resultJson;
+
+    }
 
 
 }
