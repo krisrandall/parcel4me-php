@@ -43,6 +43,9 @@
     P4M\Settings::setPublic('OpenIdConnect:ClientId',     '10004');
     P4M\Settings::setPublic('OpenIdConnect:ClientSecret', 'secret');
     P4M\Settings::setPublic('OpenIdConnect:RedirectUrl',  'http://localhost:8000/p4m/getP4MAccessToken');
+    P4M\Settings::setPublic('GFS:ClientId',               'parcel_4_me');
+    P4M\Settings::setPublic('GFS:ClientSecret',           'needmoreparcels');
+
 
 
     session_start(); // this is important for the P4M_Shop->getCurrentSessionId() to work !!
@@ -107,7 +110,7 @@
             $user->email = 'new_person@mailinator.com';
 
             
-            $p4m_address = new P4M\Models\Address();
+            $p4m_address = new P4M\Model\Address();
             $p4m_address->AddressType   = 'Address';
             $p4m_address->Street1       = '21 Pine Street';
             $p4m_address->State         = 'Qld';
@@ -116,7 +119,7 @@
 
             // Convert the user from the shopping cart DB into a 
             // P4M Consumer
-            $consumer = new P4M\Models\Consumer();
+            $consumer = new P4M\Model\Consumer();
             $consumer->GivenName  = $user->first;
             $consumer->FamilyName = $user->last;
             $consumer->Email      = $user->email;
@@ -135,7 +138,15 @@
 
             // Convert the shopping cart from the shopping cart DB into a 
             // P4M Cart
-            $cart = new P4M\Models\Cart();
+
+            $cartItem = new P4M\Model\CartItem();
+            $cartItem->Desc  = "A great thing I am buying";
+            $cartItem->Qty   = 1;
+            $cartItem->Price = 4.90;
+            $cartItem->removeNullProperties();
+
+            $cart = new P4M\Model\Cart();
+            $cart->Items = [ $cartItem ];
             $cart->removeNullProperties();
 
             return $cart;
@@ -152,6 +163,22 @@
         }
 
 
+        function getCheckoutPageHtml( $config ) {
+
+            $smarty = new Smarty;
+
+            $smarty->assign('idSrvUrl',             P4M_OID_SERVER);
+            $smarty->assign('clientId',             P4M\Settings::getPublic('OpenIdConnect:ClientId'));
+            $smarty->assign('redirectUrl',          P4M\Settings::getPublic('OpenIdConnect:RedirectUrl'));
+            
+            $smarty->assign('config', $config);
+     
+           
+            $pageHtml = $smarty->fetch(__DIR__.'/view/template/checkout.tpl');
+
+            return $pageHtml;
+
+        }
 
 
 
@@ -205,6 +232,7 @@
                 '/p4m/isLocallyLoggedIn',
                 '/p4m/localLogin',
                 '/p4m/restoreLastCart',
+                '/p4m/checkout',
                 '/error/(message)'
         );
 
@@ -244,6 +272,8 @@
             case 'localLogin' :             $my_shopping_cart->localLogin();                break;
                 
             case 'restoreLastCart' :        $my_shopping_cart->restoreLastCart();           break;
+
+            case 'checkout' :               $my_shopping_cart->checkout();                  break;
 
 
 

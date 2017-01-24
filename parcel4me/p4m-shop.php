@@ -18,16 +18,26 @@ define ('SHM_ClientCredentialsToken', 1);
 
 abstract class P4M_Shop implements P4M_Shop_Interface
 {
-    // Your Shopping Cart must implement the following
+
+    // Your Shopping Cart must implement the following :
+
     abstract public function userIsLoggedIn();
     abstract public function getConsumerFromCurrentUser();
     abstract public function getCartOfCurrentUser();
     abstract public function localErrorPageUrl($message);
 
 
+    // Your Shopping Cart may implement the following :
+
     public function getCurrentSessionId() {
         // this may be overridden if the shopping cart uses a session id other than the PHP session id internally
         return session_id();
+    }
+
+    public function goHome() {
+        // this may be overriden for the shopping cart to set a different home page
+        header("Location: /");
+        exit();
     }
 
 
@@ -36,6 +46,11 @@ abstract class P4M_Shop implements P4M_Shop_Interface
         header("Location: ".$this->localErrorPageUrl($message)); 
         exit();  
     }
+
+
+
+    // Internal Class Functions : 
+
 
     private $bearerToken;
     private function setBearerToken($token) {
@@ -97,6 +112,8 @@ abstract class P4M_Shop implements P4M_Shop_Interface
     }
 
 
+
+    // Public functions called by the cart when /p4m/ endpoints are accessed :
 
     public function signUp() {
         // http://developer.parcelfor.me/docs/documentation/parcel-for-me-widgets/p4m-register-widget/signup/
@@ -222,7 +239,7 @@ abstract class P4M_Shop implements P4M_Shop_Interface
 
         // set the p4m cookie for this retailer's site
         $accessToken  = $oidc->getAccessToken();
-        $cookieExpire = strtotime('+1 years');
+        $cookieExpire = strtotime('+'.$response->expires_in.' seconds');
         $path         = '/';
         setcookie( "p4mToken",
                    $accessToken,
@@ -379,6 +396,64 @@ abstract class P4M_Shop implements P4M_Shop_Interface
 
     }
 
+
+    public function checkout() {
+        // http://developer.parcelfor.me/docs/documentation/parcel-for-me-widgets/p4m-checkout-widget/checkout/
+
+        $currentCart = $this->getCartOfCurrentUser();
+
+        if ( (!isset($currentCart->Items)) || (empty($currentCart->Items)) ) {
+            $this->goHome();
+        }
+if (true) {
+//20p                 if ( (!array_key_exists('gfsCheckoutToken', $_COOKIE)) || ($_COOKIE['gfsCheckoutToken']=='') ) {
+
+
+            try {
+                $oidc = new \OpenIDConnectClient(GFS_SERVER,
+                                                Settings::getPublic('GFS:ClientId'),
+                                                Settings::getPublic('GFS:ClientSecret') );
+                $oidc->providerConfigParam(array('token_endpoint'=>P4M_Shop_Urls::endPoint('gfs_connect_token')));
+                $oidc->addScope('read');
+                $oidc->addScope('checkout-api');
+
+                $response = $oidc->requestClientCredentialsToken();
+
+                if (!$response) {
+                    $this->somethingWentWrong('OIDC auth returned false');
+                }
+
+            } catch (\OpenIDConnectClientException $oidcE) {
+                $this->somethingWentWrong('OIDC Exception :'.$oidcE->getMessage());
+            } catch (\Exception $e) {
+                $this->somethingWentWrong('Exception doing OIDC auth:'.$e->getMessage());
+            }
+
+
+            $accessToken  = $response->access_token;
+            $cookieExpire = strtotime('+'.$response->expires_in.' seconds');
+            $path         = '/';
+            setcookie( "p4mToken",
+                    $accessToken,
+                    $cookieExpire,
+                    $path );
+            $_COOKIE['gfsCheckoutToken'] = $accessToken;
+
+        }
+
+        $checkoutConfig = array (
+            'sessionId'           => $this->getCurrentSessionId(),
+            'gfsAccessToken'      => (array_key_exists('gfsCheckoutToken', $_COOKIE) ? $_COOKIE['gfsCheckoutToken'] : ''),
+            'initialAddress'      => (array_key_exists('p4mInitialAddress', $_COOKIE) ? $_COOKIE['p4mInitialAddress'] : ''),
+            'initialPostCode'     => (array_key_exists('p4mDefaultPostCode', $_COOKIE) ? $_COOKIE['p4mDefaultPostCode'] : ''),
+            'initialCountryCode'  => (array_key_exists('p4mDefaultCountryCode', $_COOKIE) ? $_COOKIE['p4mDefaultCountryCode'] : '')
+        );
+
+        $checkoutHtml = $this->getCheckoutPageHtml( $checkoutConfig );
+
+        echo $checkoutHtml;
+
+    }
 
 
 

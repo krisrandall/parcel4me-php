@@ -9,6 +9,7 @@ namespace P4M\Models;
 
 require 'model/consumer.php';
 require 'model/cart.php';
+require 'model/cart-item.php';
 require 'model/address.php';
 
 

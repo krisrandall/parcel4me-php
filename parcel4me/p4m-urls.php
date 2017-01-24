@@ -26,8 +26,13 @@ class P4M_Shop_Urls
             'registerConsumer'          => P4M_API_SERVER . '/registerConsumer',
             'consumer'                  => P4M_API_SERVER . '/consumer',
             'consumerExtras'            => P4M_API_SERVER . '/consumerExtras',
-            'restoreLastCart'           => P4M_API_SERVER . '/restoreLastCart'
+            'restoreLastCart'           => P4M_API_SERVER . '/restoreLastCart',
             
+
+            // Global Freight Solutions (GFS) endpoints
+            
+            'gfs_connect_token'         => GFS_SERVER . '/connect/token'
+
 
     );
 

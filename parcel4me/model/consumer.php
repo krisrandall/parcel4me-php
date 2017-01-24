@@ -1,6 +1,6 @@
 <?php
 
-namespace P4M\Models;
+namespace P4M\Model;
 require_once 'p4m-model.php';
 
 /*

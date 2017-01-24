@@ -55,6 +55,19 @@ interface P4M_Shop_Interface {
     public function setCartOfCurrentUser( $p4m_cart );
 
 
+    /**
+        returns the full HTML of the checkout page of the shopping cart application
+
+        These values come into the template :
+        $replacementParams = array (
+                            sessionId       => '',
+                            gfsAccessToken  => ''
+                        );
+
+    */
+    public function getCheckoutPageHtml( $replacementParams );
+
+
 
 
     /**
