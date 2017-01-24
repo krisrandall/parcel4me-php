@@ -43,6 +43,13 @@
         
         <br/>
 
+        <h2>p4m-checkout</h2>
+        <p>
+            After logging on, checkout the <a href="/p4m/checkout">/p4m/checkout</a>
+        </p>
+
+        <br/>
+
     </body>
 
 </html>
