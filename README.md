@@ -17,7 +17,7 @@ This repo is divided into two sections :
 
 ## Quick Start
 
-[PHP](http://php.net/manual/en/intro-whatis.php) (at least version 5.5) and [Composer](https://getcomposer.org/) are required.    
+[PHP](http://php.net/manual/en/intro-whatis.php) (at least version 7) and [Composer](https://getcomposer.org/) are required.    
   
 
 ### Install
