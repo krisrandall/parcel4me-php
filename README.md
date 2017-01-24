@@ -20,12 +20,20 @@ This repo is divided into two sections :
 [PHP](http://php.net/manual/en/intro-whatis.php) (at least version 5.5) and [Composer](https://getcomposer.org/) are required.    
   
 
-**Composer install**
+### Install
+
+**Composer Install**
 
     $ cd parcel4me;   composer install; cd ..
     $ cd basic-demo;  composer install; cd ..
+
+**Widgets Install** *(requires bash, git and bower)*
+
+    $ ./install-widgets.sh
+  
    
-   
+### Run
+
 **Start the server**
 
 	$ php -S localhost:8000
@@ -36,5 +44,13 @@ This repo is divided into two sections :
  * <a href="http://localhost:8000/">http://localhost:8000/</a>
 
 
+
+
+## Update P4M Widgets 
+
+*(requires bash and git)*
  
+    $ ./update-widgets.sh
+    
+
  
