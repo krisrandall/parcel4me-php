@@ -344,7 +344,12 @@ abstract class P4M_Shop implements P4M_Shop_Interface
                     if (!isset($extraDetails->id)) throw new \Exception('No "id" field on local user');
                     $extraDetails->LocalId = $extraDetails->id;
                     $rob = $this->apiHttp('POST',  P4M_Shop_Urls::endPoint('consumerExtras'),  $extraDetails);
-                } elseif ( $consumer->Extras->LocalId != $loggedInUser->id ) {
+                } elseif ( (property_exists($consumer, 'Extras')) && 
+                           (property_exists($consumer->Extras, 'LocalId')) && 
+                           (is_object($loggedInUser)) &&
+                           (property_exists($loggedInUser, 'id')) &&
+                           ($consumer->Extras->LocalId != $loggedInUser->id) ) 
+                {
                     // case 4
                     $this->logoutCurrentUser();
                     $this->loginUser( $consumer->Extras->LocalId );
