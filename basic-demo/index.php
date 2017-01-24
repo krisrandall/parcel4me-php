@@ -99,7 +99,7 @@
         }
         
 
-        function getConsumerFromCurrentUser() {
+        function getCurrentUserDetails() {
             /* 
                 some logic goes here to fetch the 
                 details of the current user 
@@ -159,7 +159,7 @@
 
         function setCartOfCurrentUser( $p4m_cart ) {
             /* 
-                some logice goes here to set local shopping cart DB
+                some logic goes here to set local shopping cart DB
                 based on the passed in p4m shopping cart object 
             */
 
@@ -182,6 +182,28 @@
 
             return $pageHtml;
 
+        }
+
+
+        function updateShipping( $shippingServiceName, $amount, $dueDate ) {
+            /*
+                some logic goes here to set these shipping amounts and 
+                possibly recalculate the tax on the current shopping cart 
+            */
+
+            return true;
+        }
+
+
+        function getCartTotals() {
+
+            $r = new stdClass();
+            $r->Tax      = 10.00;
+            $r->Shipping = 20.00;
+            $r->Discount = 5.00;
+            $r->Total    = 100;
+
+            return $r;
         }
 
 

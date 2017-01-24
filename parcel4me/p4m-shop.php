@@ -22,9 +22,18 @@ abstract class P4M_Shop implements P4M_Shop_Interface
     // Your Shopping Cart must implement the following :
 
     abstract public function userIsLoggedIn();
-    abstract public function getConsumerFromCurrentUser();
+    abstract public function createNewUser( $p4m_consumer );
+    abstract public function loginUser( $localUserId );
+    abstract public function logoutCurrentUser();
+    abstract public function getCurrentUserDetails();
+    abstract public function setCurrentUserDetails( $p4m_consumer );
     abstract public function getCartOfCurrentUser();
+    abstract public function setCartOfCurrentUser( $p4m_cart );
+    abstract public function getCheckoutPageHtml( $replacementParams );
+    abstract public function updateShipping( $shippingServiceName, $amount, $dueDate );
+    abstract public function getCartTotals();    
     abstract public function localErrorPageUrl($message);
+
 
 
     // Your Shopping Cart may implement the following :

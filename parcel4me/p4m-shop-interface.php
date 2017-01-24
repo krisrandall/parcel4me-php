@@ -29,16 +29,16 @@ interface P4M_Shop_Interface {
 
 
     /**
-        set the local user details based on the p4m consumer object 
-    */
-    public function setCurrentUserDetails( $p4m_consumer );
-
-
-    /**
         return a populated consumer JSON object as defined by the model :
         http://developer.parcelfor.me/docs/documentation/api-integration/models/consumer/
     */
-    public function getConsumerFromCurrentUser();
+    public function getCurrentUserDetails();
+
+
+    /**
+        set the local user details based on the p4m consumer object 
+    */
+    public function setCurrentUserDetails( $p4m_consumer );
 
 
     /**
@@ -66,6 +66,23 @@ interface P4M_Shop_Interface {
 
     */
     public function getCheckoutPageHtml( $replacementParams );
+
+
+    /**
+        update the shipping and tax on the current local cart   
+    */
+    public function updateShipping( $shippingServiceName, $amount, $dueDate );
+
+
+    /**
+        return an object with the following fields from the current local cart :
+            ->Tax
+            ->Shipping 
+            ->Discount 
+            ->Total
+    */
+    public function getCartTotals();
+
 
 
 
