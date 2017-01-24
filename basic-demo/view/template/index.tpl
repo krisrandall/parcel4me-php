@@ -13,17 +13,8 @@
 
     <body>
     
-        <h1>p4m-server API</h1>
-        These end points must be implemented in a shopping cart for it to use the Parcel4Me one-click checkout and delivery
-
-        <ul>
-        {foreach from=$supportedEndPoints item=endpoint}
-            <a href="{$endpoint}"><li>{$endpoint}</li></a>
-        {/foreach}
-        </ul>
-            
         <hr/>
-        
+
         <h1>Cart UI P4M widgets </h1>
         These UI Widgets should be added to a shopping cart in the approprate places
         
@@ -49,6 +40,23 @@
         </p>
 
         <br/>
+
+
+        <hr/>
+
+        <h1>p4m-server API</h1>
+        These end points must be implemented in a shopping cart for it to use the 
+        Parcel4Me one-click checkout and delivery:
+
+        <ul>
+        {foreach from=$supportedEndPoints item=endpoint}
+            <a href="{$endpoint}"><li>{$endpoint}</li></a>
+        {/foreach}
+        </ul>
+
+        <br/>
+
+        <hr/>
 
     </body>
 
