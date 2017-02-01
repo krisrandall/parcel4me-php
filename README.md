@@ -31,7 +31,10 @@ This repo is divided into two sections :
 
     $ ./install-widgets.sh
   
-   
+*(Note that if the [p4m-widget repo](https://github.com/ParcelForMe/p4m-widgets) gets updated; use `$ ./update-widgets.sh`)*
+
+
+  
 ### Run
 
 **Start the server**
@@ -45,12 +48,5 @@ This repo is divided into two sections :
 
 
 
-
-## Update P4M Widgets 
-
-*(requires bash and git)*
- 
-    $ ./update-widgets.sh
-    
 
  
