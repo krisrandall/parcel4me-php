@@ -53,10 +53,23 @@ abstract class P4M_Shop implements P4M_Shop_Interface
     }
 
 
-    private function somethingWentWrong($message) {
+    public function somethingWentWrong($message) {
         error_log("somethingWentWrong(" . $message . ") ". $this->localErrorPageUrl($message));
         header("Location: ".$this->localErrorPageUrl($message)); 
         exit();  
+    }
+
+
+    public function paypalCancel() {
+        // http://developer.parcelfor.me/docs/documentation/parcel-for-me-widgets/p4m-checkout-widget/paypalcancel/
+
+        // these params are available :       
+        //  $_GET['pasref']	PSP transaction reference
+        //  $_GET['token'] Paypal transaction token
+        //  $_GET['PayerID']	Paypal payer Id
+
+        // close this popped up window
+        echo '<script>window.close();</script>';
     }
 
 
@@ -614,7 +627,37 @@ abstract class P4M_Shop implements P4M_Shop_Interface
     }
 
 
+    public function purchase() {
+        // http://developer.parcelfor.me/docs/documentation/parcel-for-me-widgets/p4m-checkout-widget/purchase/
 
+        // TODO :
+        echo "NOT DONE YET !";
+
+    }
+
+    
+    public function paypalSetup() {
+        // http://developer.parcelfor.me/docs/documentation/parcel-for-me-widgets/p4m-checkout-widget/paypalsetup/
+
+        // TODO :
+        echo "NOT DONE YET !";
+
+    }
+
+
+    
+    public function purchaseComplete() {
+        // http://developer.parcelfor.me/docs/documentation/parcel-for-me-widgets/p4m-checkout-widget/purchasecomplete/
+
+        // This endpoint is called when a 3D Secure transaction has completed. 
+        // It allows the host server to request the cart from P4M and store the cart, delivery and billing address details.
+
+        // TODO :
+        echo "NOT DONE YET !";
+
+    }
+
+    
 
 }
 

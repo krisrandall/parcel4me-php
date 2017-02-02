@@ -327,6 +327,10 @@
                 '/p4m/applyDiscountCode',
                 '/p4m/removeDiscountCode',
                 '/p4m/itemQtyChanged',
+                '/p4m/purchase',
+                '/p4m/paypalSetup',
+                '/p4m/paypalCancel',
+                '/p4m/purchaseComplete',
                 '/error/(message)'
         );
 
@@ -361,6 +365,9 @@
             case 'restoreLastCart' :        $my_shopping_cart->restoreLastCart();           break;
             case 'checkout' :               $my_shopping_cart->checkout();                  break;
             case 'getP4MCart' :             $my_shopping_cart->getP4MCart();                break;
+            case 'paypalSetup' :            $my_shopping_cart->paypalSetup();               break;
+            case 'paypalCancel' :           $my_shopping_cart->paypalCancel();              break;
+            case 'purchaseComplete' :       $my_shopping_cart->purchaseComplete();          break;
             
             default:
                 echo 'Hello unhandled GET endpoint : ' . htmlentities($p4mEndpoint);
@@ -375,6 +382,7 @@
             case 'applyDiscountCode' :      $my_shopping_cart->applyDiscountCode();         break;
             case 'removeDiscountCode' :     $my_shopping_cart->removeDiscountCode();        break;
             case 'itemQtyChanged' :         $my_shopping_cart->itemQtyChanged();            break;
+            case 'purchase' :               $my_shopping_cart->purchase();            break;
             
             default:
                 echo 'Hello unhandled POST endpoint : ' . htmlentities($p4mEndpoint);
