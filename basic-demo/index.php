@@ -205,7 +205,7 @@
             $r->Tax      = 10.00;
             $r->Shipping = 20.00;
             $r->Discount = 5.00;
-            $r->Total    = 100;
+            $r->Total    = 112.22;
 
             return $r;
         }

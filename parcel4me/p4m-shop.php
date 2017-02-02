@@ -676,7 +676,7 @@ var_dump($rob);
                 $resultObject->Token   = $rob->Token;            
             } catch (\Exception $e) {
                 $resultObject->Success = false;
-                $resultObject->Error   = $e;
+                $resultObject->Error   = $e->getMessage();
             }
 
         }
