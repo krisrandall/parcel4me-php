@@ -196,7 +196,11 @@
 
 
         function getCartTotals() {
-
+            /*
+                some logic goes here to fetch these values from
+                the current shopping cart 
+            */
+            
             $r = new stdClass();
             $r->Tax      = 10.00;
             $r->Shipping = 20.00;
@@ -259,6 +263,7 @@
                 '/p4m/localLogin',
                 '/p4m/restoreLastCart',
                 '/p4m/checkout',
+                '/p4m/updShippingService',
                 '/error/(message)'
         );
 
@@ -281,35 +286,33 @@
     // Subrouting
 
     // Dynamic route: p4m/*
+    // GET
     $router->get('/p4m/(\w+)', function ($p4mEndpoint) {
-
-        file_put_contents('php://stderr', print_r(' - '.$p4mEndpoint, TRUE));
-
         global $my_shopping_cart;
-
+        switch($p4mEndpoint) {
+            
+            case 'signup' :                 $my_shopping_cart->signUp();               break;
+            case 'getP4MAccessToken' :      $my_shopping_cart->getP4MAccessToken();         break;
+            case 'isLocallyLoggedIn' :      $my_shopping_cart->isLocallyLoggedIn();         break;                
+            case 'localLogin' :             $my_shopping_cart->localLogin();                break;                
+            case 'restoreLastCart' :        $my_shopping_cart->restoreLastCart();           break;
+            case 'checkout' :               $my_shopping_cart->checkout();                  break;
+            case 'getP4MCart' :             $my_shopping_cart->getP4MCart();                break;
+            
+            default:
+                echo 'Hello unhandled GET endpoint : ' . htmlentities($p4mEndpoint);
+        }
+    });
+    // POST 
+    $router->post('/p4m/(\w+)', function ($p4mEndpoint) {
+        global $my_shopping_cart;
         switch($p4mEndpoint) {
 
-            case 'signup' :                 $my_shopping_cart->signUp();                    break;
-
-            case 'getP4MAccessToken' :      $my_shopping_cart->getP4MAccessToken();         break;
-
-            case 'isLocallyLoggedIn' :      $my_shopping_cart->isLocallyLoggedIn();         break;
-                
-            case 'localLogin' :             $my_shopping_cart->localLogin();                break;
-                
-            case 'restoreLastCart' :        $my_shopping_cart->restoreLastCart();           break;
-
-            case 'checkout' :               $my_shopping_cart->checkout();                  break;
-
-            case 'getP4MCart' :             $my_shopping_cart->getP4MCart();                break;
-
-
-
+            case 'updShippingService' :     $my_shopping_cart->udpShippingService();        break;
+          
             default:
-                echo 'Hello unhandled endpoint : ' . htmlentities($p4mEndpoint);
-
+                echo 'Hello unhandled POST endpoint : ' . htmlentities($p4mEndpoint);
         }
-        
     });
 
 

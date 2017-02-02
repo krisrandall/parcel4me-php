@@ -31,7 +31,7 @@ abstract class P4M_Shop implements P4M_Shop_Interface
     abstract public function setCartOfCurrentUser( $p4m_cart );
     abstract public function getCheckoutPageHtml( $replacementParams );
     abstract public function updateShipping( $shippingServiceName, $amount, $dueDate );
-    abstract public function getCartTotals();    
+    abstract public function getCartTotals();
     abstract public function localErrorPageUrl($message);
 
 
@@ -471,25 +471,52 @@ abstract class P4M_Shop implements P4M_Shop_Interface
 
 
     public function getP4MCart() {
+        // http://developer.parcelfor.me/docs/documentation/parcel-for-me-widgets/p4m-checkout-widget/getp4mcart/
 
         $resultObject = new \stdClass();
 
         try {
-            
             $cartObject = $this->getCartOfCurrentUser();
-
             $resultObject->Success = true;
             $resultObject->Cart    = $cartObject;            
-
         } catch (\Exception $e) {
-
             $resultObject->Success = false;
             $resultObject->Error   = $e->getMessage();
         }
 
-
         $resultJson = json_encode($resultObject, JSON_PRETTY_PRINT);
         echo $resultJson;
+
+    }
+
+
+    public function udpShippingService() {
+        // http://developer.parcelfor.me/docs/documentation/parcel-for-me-widgets/p4m-checkout-widget/updshippingservice/
+
+        // update the local cart with the new shipping amt
+        // recalculate cart totals (tax, discount, etc)
+
+        $postBody = file_get_contents('php://input');
+        $postBody = json_decode($postBody);
+        
+        $resultObject = new \stdClass();
+
+        try {
+            $this->updateShipping( $postBody->Service, $postBody->Amount, $postBody->DueDate );
+            $totalsObject = $this->getCartTotals();
+
+            $resultObject->Success  = true;
+            $resultObject->Tax      = $totalsObject->Tax;
+            $resultObject->Shipping = $totalsObject->Shipping;
+            $resultObject->Discount = $totalsObject->Discount;
+            $resultObject->Total    = $totalsObject->Total;
+        } catch (\Exception $e) {
+            $resultObject->Success = false;
+            $resultObject->Error   = $e->getMessage();
+        }
+
+        $resultJson = json_encode($resultObject, JSON_PRETTY_PRINT);
+        echo $resultJson; 
 
     }
 
