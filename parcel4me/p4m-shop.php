@@ -177,7 +177,7 @@ abstract class P4M_Shop implements P4M_Shop_Interface
 
 
         // Get the data to send to signup this consumer 
-        $consumer = $this->getConsumerFromCurrentUser();
+        $consumer = $this->getCurrentUserDetails();
         $cart     = $this->getCartOfCurrentUser();
         $consumerAndCartMessage = json_encode( array (
                 'Consumer'  =>  $consumer,
