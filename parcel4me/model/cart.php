@@ -8,6 +8,7 @@ require_once 'p4m-model.php';
     Cart
 
     see : http://developer.parcelfor.me/docs/documentation/api-integration/models/cart/
+
 */
 class Cart extends P4mModel
 {

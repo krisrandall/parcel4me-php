@@ -8,6 +8,7 @@ require_once 'p4m-model.php';
     CartItem
 
     see : http://developer.parcelfor.me/docs/documentation/api-integration/models/cartitem/
+
 */
 class CartItem extends P4mModel
 {
@@ -25,6 +26,7 @@ class CartItem extends P4mModel
     public  $Rating;
     public  $SiteReference;         /* can be used by the Retailer to hold information specific to the Retailer */
     public  $Options;               /* a list of options that the consumer may have selected when adding the item to the cart */
+
 }
 
 ?>
