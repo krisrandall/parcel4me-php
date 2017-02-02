@@ -7,48 +7,48 @@ parcel4me-php implements the Host Server methods required by the Parcel4Me Widge
 
 To facilitate implementing *<a href="http://parcelfor.me/" target="_blank"> Parcel4Me</a>'s* one-click checkout and delivery into an existing PHP shopping cart.
 
+
+
+
 ## Usage (how to modify an existing PHP shopping cart)
 
-1. `require 'parcel4me/p4m-shop.php'` and implement the `P4M\P4M_Shop` abstract class, which means coding each of the methods listed in `parcel4me/p4m-shop-interface.php` to correctly interact with the shopping cart backend
+
+To bring the Parcel4Me functionality into an existing shopping cart 3 steps are required :
+
+1. `require 'parcel4me/p4m-shop.php'` and implement the `P4M\P4M_Shop` abstract class, which means coding each of the methods listed in [p4m-shop-interface](p4m-shop-interface.php)
+
 2. add the Parcel4Me UI widgets into your shopping cart in the approprate places
-3. implement the `p4m/*` API endpoints in the shopping carts router
 
-(see the [basic demo implementation](../basic-demo/README.md))
+3. to accept all of the required `p4m/*` API endpoints :   
+   *(each of which has a corresponding function already implemented in the P4M_Shop)*
 
-## Existing Implementations
+> #### API endpoints to receive on your router
+> ##### p4m-login Widget
+> 
+> * GET  p4m/getP4MAccessToken
+> * GET  p4m/isLocallyLoggedIn
+> * GET  p4m/localLogin
+> * GET  p4m/restoreLastCart
+> 
+> ##### p4m-checkout Widget
+> 
+> * GET  p4m/checkout
+> * GET  p4m/getP4MCart
+> * POST p4m/updShippingService
+> * GET  p4m/applyDiscountCode
+> * GET  p4m/removeDiscountCode
+> * POST p4m/itemQtyChanged
+> * POST p4m/purchase
+> * GET  p4m/paypalSetup
+> * GET  p4m/paypalCancel
+> * GET  p4m/purchaseComplete
+> 
+> ##### p4m-register Widget
+> 
+> * GET  p4m/signup
 
-TODO :  (some implementations, and then list them here) !!
 
+## Demo Example
 
------
-
-## API to Implement
-
-The following methods must be implemented to bring the Parcel4Me functionality into an existing shopping cart :
-
-
-### p4m-login Widget
-
-* getP4MAccessToken
-* isLocallyLoggedIn
-* localLogin
-* restoreLastCart
-
-### p4m-checkout Widget
-
-* checkout
-* getP4MCart
-* shippingSelector
-* updShippingService
-* applyDiscountCode
-* removeDiscountCode
-* itemQtyChanged
-* purchase
-* paypalSetup
-* paypalCancel
-* purchaseComplete
-
-### p4m-register Widget
-
-* signup
+See the [basic demo implementation](../basic-demo/README.md)
 
