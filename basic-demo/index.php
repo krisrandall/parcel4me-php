@@ -232,6 +232,28 @@
         }
 
 
+        function updateRemoveDiscountCode( $discountCode ) {
+            /* 
+                some logic goes here to remove this discount code from the cart 
+                throw error if it is not on there
+            */
+
+            $dis = new stdClass();
+
+            if ($discountCode != 'valid_code') // special discount code "valid_code" works, else fails
+            {
+                throw new Exception('Unknown discount code.'); 
+            }
+
+            $dis->Code = $discountCode;
+            $dis->Description = 'A demo valid coupon code!';
+            $dis->Amount = 0.01;
+
+            return $dis;
+        }
+        
+
+
         function localErrorPageUrl($message) {
             return 'http://' . $_SERVER['HTTP_HOST'] . '/error/' . urlencode($message);
         }
@@ -285,6 +307,7 @@
                 '/p4m/checkout',
                 '/p4m/updShippingService',
                 '/p4m/applyDiscountCode',
+                '/p4m/removeDiscountCode',
                 '/error/(message)'
         );
 
@@ -331,6 +354,7 @@
 
             case 'updShippingService' :     $my_shopping_cart->udpShippingService();        break;
             case 'applyDiscountCode' :      $my_shopping_cart->applyDiscountCode();         break;
+            case 'removeDiscountCode' :     $my_shopping_cart->removeDiscountCode();        break;
             
             default:
                 echo 'Hello unhandled POST endpoint : ' . htmlentities($p4mEndpoint);

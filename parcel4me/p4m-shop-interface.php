@@ -95,6 +95,14 @@ interface P4M_Shop_Interface {
     public function updateWithDiscountCode( $discountCode );
 
 
+    /**
+        remove the discount code and update the totals on the local cart 
+        return discount details object`
+    */
+    public function updateRemoveDiscountCode( $discountCode );
+
+
+
 
 
     /**
