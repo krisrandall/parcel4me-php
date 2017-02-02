@@ -142,7 +142,7 @@
             $cartItem = new P4M\Model\CartItem();
             $cartItem->Desc         = "A great thing I am buying";
             $cartItem->Qty          = 1;
-            $cartItem->Price        = 4.90;
+            $cartItem->Price        = 100;
             $cartItem->LinkToImage  = "http://cdn2.wpbeginner.com/wp-content/uploads/2015/12/pixabay.jpg";
             $cartItem->removeNullProperties();
 

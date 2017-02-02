@@ -83,7 +83,7 @@ abstract class P4M_Shop implements P4M_Shop_Interface
     }
 
 
-    private function apiHttp($method, $endpoint, $data = null) {
+    private function apiHttp_withoutErrorHandler($method, $endpoint, $data = null) {
         /*
         This does an HTTP request to the API, and calls somethingWentWrong() if the result does not contain a .Success property 
         It passes $this->$bearerToken as the auth header bearer token so call setBearerToken() first
@@ -115,16 +115,16 @@ abstract class P4M_Shop implements P4M_Shop_Interface
         curl_close($curl);
 
         if ($err) {
-            $this->somethingWentWrong("Error calling API : # " . $err . " <!-- ".$endpoint." -->");
+            throw new \Exception("Error calling API : # " . $err . " <!-- ".$endpoint." -->");
         } elseif ($response=='') {
-            $this->somethingWentWrong("Error calling API : returned blank (token could be expired)");
+            throw new \Exception("Error calling API : returned blank (token could be expired)");
         } else {
 
             $rob = new \stdClass();
             $rob = json_decode($response);
 
             if ( (!is_object($rob)) || (!property_exists($rob, 'Success')) ) {
-                $this->somethingWentWrong("Error calling API : No 'Success' property of response received");
+                throw new \Exception("Error calling API : No 'Success' property of response received");
             } 
 
         }
@@ -135,6 +135,20 @@ abstract class P4M_Shop implements P4M_Shop_Interface
         return $rob; // return the response as an object  
 
     }
+
+
+    private function apiHttp($method, $endpoint, $data = null) {
+
+        // do a http request, but for any error use the "somethingWentWrong" method 
+
+        try {
+            $this->apiHttp_withoutErrorHandler($method, $endpoint, $data = null);
+        } catch (\Exception $e) {
+            $this->somethingWentWrong($e);
+        }
+
+    }
+
 
 
 
@@ -639,8 +653,36 @@ abstract class P4M_Shop implements P4M_Shop_Interface
     public function paypalSetup() {
         // http://developer.parcelfor.me/docs/documentation/parcel-for-me-widgets/p4m-checkout-widget/paypalsetup/
 
-        // TODO :
-        echo "NOT DONE YET !";
+        $cartId	    = $_GET['cartId'];
+        $cartTotal	= $_GET['cartTotal'];
+
+        $resultObject = new \stdClass();
+
+        // validate that the cart total from the widget is correct to prevent cart tampering in the browser
+        $localCartTotals = $this->getCartTotals();
+        if ($cartTotal != $localCartTotals->Total) {
+            $resultObject->Success = false;
+            $resultObject->Error   = "Invalid cart total";
+            error_log('Invalid cart total, p4m says : '.$cartTotal.', local db says : '.$localCartTotals->Total);
+        } else {
+
+            // Send the p4m server paypal setup API request 
+            $this->setBearerToken($_COOKIE["p4mToken"]);
+            try {
+                $rob = $this->apiHttp_withoutErrorHandler('POST', P4M_Shop_Urls::endPoint('paypalSetup', '/'.$cartId));
+var_dump($rob);
+  
+                $resultObject->Success = true;
+                $resultObject->Token   = $rob->Token;            
+            } catch (\Exception $e) {
+                $resultObject->Success = false;
+                $resultObject->Error   = $e;
+            }
+
+        }
+
+        $resultJson = json_encode($resultObject, JSON_PRETTY_PRINT);
+        echo $resultJson; 
 
     }
 

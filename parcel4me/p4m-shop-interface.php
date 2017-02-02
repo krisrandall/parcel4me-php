@@ -106,6 +106,7 @@ interface P4M_Shop_Interface {
         pass in an array of item codes and new quantities,
         like this :
              [ {"ItemCode": "item1", "Qty": 10.12}, {"ItemCode": "item2", "Qty": 12.34}, ...]
+        return an array of "Discount"s
     */
     public function updateCartItemQuantities( $itemsUpdateArray );
 

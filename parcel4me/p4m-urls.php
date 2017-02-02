@@ -27,7 +27,8 @@ class P4M_Shop_Urls
             'consumer'                  => P4M_API_SERVER . '/consumer',
             'consumerExtras'            => P4M_API_SERVER . '/consumerExtras',
             'restoreLastCart'           => P4M_API_SERVER . '/restoreLastCart',
-            
+            'paypalSetup'               => P4M_API_SERVER . '/paypalSetup',
+
 
             // Global Freight Solutions (GFS) endpoints
             
@@ -37,10 +38,10 @@ class P4M_Shop_Urls
     );
 
 
-    public static function endPoint($endPointStr) {
+    public static function endPoint($endPointStr, $urlParams = '') {
 
         $ep = self::$endPoints[$endPointStr];
-        return $ep;
+        return $ep . $urlParams;
 
     }
 
