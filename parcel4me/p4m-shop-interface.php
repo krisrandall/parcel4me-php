@@ -84,6 +84,16 @@ interface P4M_Shop_Interface {
     public function getCartTotals();
 
 
+    /**
+        apply this discount/coupon code and update the totals on the local cart
+        return discount details object, which includes
+            ->Code (same as passed in)
+            ->Description 
+            ->Amount 
+        (if the coupon code is not valid, throw an exception)
+    */
+    public function updateWithDiscountCode( $discountCode );
+
 
 
 

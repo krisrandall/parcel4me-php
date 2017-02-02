@@ -200,7 +200,7 @@
                 some logic goes here to fetch these values from
                 the current shopping cart 
             */
-            
+
             $r = new stdClass();
             $r->Tax      = 10.00;
             $r->Shipping = 20.00;
@@ -210,6 +210,26 @@
             return $r;
         }
 
+
+        function updateWithDiscountCode( $discountCode ) {
+            /* 
+                some logic goes here to check if this discount code is valid,
+                if not throw an error, if so then apply it to the cart and return the discount details 
+            */
+
+            $dis = new stdClass();
+
+            if ($discountCode != 'valid_code') // special discount code "valid_code" works, else fails
+            {
+                throw new Exception('Unknown discount code.'); 
+            }
+
+            $dis->Code = $discountCode;
+            $dis->Description = 'A demo valid coupon code!';
+            $dis->Amount = 0.01;
+
+            return $dis;
+        }
 
 
         function localErrorPageUrl($message) {
@@ -264,6 +284,7 @@
                 '/p4m/restoreLastCart',
                 '/p4m/checkout',
                 '/p4m/updShippingService',
+                '/p4m/applyDiscountCode',
                 '/error/(message)'
         );
 
@@ -291,7 +312,7 @@
         global $my_shopping_cart;
         switch($p4mEndpoint) {
             
-            case 'signup' :                 $my_shopping_cart->signUp();               break;
+            case 'signup' :                 $my_shopping_cart->signUp();                    break;
             case 'getP4MAccessToken' :      $my_shopping_cart->getP4MAccessToken();         break;
             case 'isLocallyLoggedIn' :      $my_shopping_cart->isLocallyLoggedIn();         break;                
             case 'localLogin' :             $my_shopping_cart->localLogin();                break;                
@@ -309,7 +330,8 @@
         switch($p4mEndpoint) {
 
             case 'updShippingService' :     $my_shopping_cart->udpShippingService();        break;
-          
+            case 'applyDiscountCode' :      $my_shopping_cart->applyDiscountCode();         break;
+            
             default:
                 echo 'Hello unhandled POST endpoint : ' . htmlentities($p4mEndpoint);
         }

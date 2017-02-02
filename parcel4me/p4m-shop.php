@@ -32,7 +32,8 @@ abstract class P4M_Shop implements P4M_Shop_Interface
     abstract public function getCheckoutPageHtml( $replacementParams );
     abstract public function updateShipping( $shippingServiceName, $amount, $dueDate );
     abstract public function getCartTotals();
-    abstract public function localErrorPageUrl($message);
+    abstract public function updateWithDiscountCode( $discountCode );
+    abstract public function localErrorPageUrl( $message );
 
 
 
@@ -369,9 +370,8 @@ abstract class P4M_Shop implements P4M_Shop_Interface
 
             }
 
-
-            // optionally set RedirectUrl
-            echo '{ "RedirectUrl": null, "Success": true, "Error": null }';
+            $redirectTo = ($_GET['currentPage']?:null);
+            echo '{ "RedirectUrl": "'.$redirectTo.'", "Success": true, "Error": null }';
 
         }
 
@@ -517,6 +517,37 @@ abstract class P4M_Shop implements P4M_Shop_Interface
 
         $resultJson = json_encode($resultObject, JSON_PRETTY_PRINT);
         echo $resultJson; 
+
+    }
+
+
+    public function applyDiscountCode() {
+        // http://developer.parcelfor.me/docs/documentation/parcel-for-me-widgets/p4m-checkout-widget/applydiscountcode/
+
+        $postBody = file_get_contents('php://input');
+        $postBody = json_decode($postBody);
+
+        $resultObject = new \stdClass();
+
+        try {
+            $discountCodeDetails = $this->updateWithDiscountCode( $postBody->discountCode );
+            $totalsObject = $this->getCartTotals();
+
+            $resultObject->Success      = true;
+            $resultObject->Tax          = $totalsObject->Tax;
+            $resultObject->Shipping     = $totalsObject->Shipping;
+            $resultObject->Discount     = $totalsObject->Discount;
+            $resultObject->Total        = $totalsObject->Total;
+            $resultObject->Code         = $discountCodeDetails->Code;
+            $resultObject->Description  = $discountCodeDetails->Description;
+            $resultObject->Amount       = $discountCodeDetails->Amount;
+        } catch (\Exception $e) {
+            $resultObject->Success = false;
+            $resultObject->Error   = $e->getMessage();
+        }
+
+        $resultJson = json_encode($resultObject, JSON_PRETTY_PRINT);
+        echo $resultJson;
 
     }
 
