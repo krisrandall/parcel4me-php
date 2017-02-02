@@ -110,12 +110,15 @@ abstract class P4M_Shop implements P4M_Shop_Interface
         ));
 
         $response = curl_exec($curl);
-        $err = curl_error($curl);
+        $err  = curl_error($curl);
+        $info = curl_getinfo($curl);
 
         curl_close($curl);
 
         if ($err) {
             throw new \Exception("Error calling API : # " . $err . " <!-- ".$endpoint." -->");
+        } elseif ($info && array_key_exists('http_code', $info) && $info['http_code']!=200) {
+            throw new \Exception("Error calling API : Returned {$info['http_code']}.");
         } elseif ($response=='') {
             throw new \Exception("Error calling API : returned blank (token could be expired)");
         } else {
@@ -670,8 +673,6 @@ abstract class P4M_Shop implements P4M_Shop_Interface
             $this->setBearerToken($_COOKIE["p4mToken"]);
             try {
                 $rob = $this->apiHttp_withoutErrorHandler('POST', P4M_Shop_Urls::endPoint('paypalSetup', '/'.$cartId));
-var_dump($rob);
-  
                 $resultObject->Success = true;
                 $resultObject->Token   = $rob->Token;            
             } catch (\Exception $e) {
