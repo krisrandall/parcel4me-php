@@ -97,10 +97,17 @@ interface P4M_Shop_Interface {
 
     /**
         remove the discount code and update the totals on the local cart 
-        return discount details object`
+        return discount details object
     */
     public function updateRemoveDiscountCode( $discountCode );
 
+
+    /**
+        pass in an array of item codes and new quantities,
+        like this :
+             [ {"ItemCode": "item1", "Qty": 10.12}, {"ItemCode": "item2", "Qty": 12.34}, ...]
+    */
+    public function updateCartItemQuantities( $itemsUpdateArray );
 
 
 

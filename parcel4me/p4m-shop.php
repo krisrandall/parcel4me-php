@@ -34,6 +34,7 @@ abstract class P4M_Shop implements P4M_Shop_Interface
     abstract public function getCartTotals();
     abstract public function updateWithDiscountCode( $discountCode );
     abstract public function updateRemoveDiscountCode( $discountCode );
+    abstract public function updateCartItemQuantities( $itemsUpdateArray );
     abstract public function localErrorPageUrl( $message );
 
 
@@ -580,6 +581,35 @@ abstract class P4M_Shop implements P4M_Shop_Interface
 
         $resultJson = json_encode($resultObject, JSON_PRETTY_PRINT);
         echo $resultJson;
+
+    }
+
+
+    public function itemQtyChanged() {
+        // http://developer.parcelfor.me/docs/documentation/parcel-for-me-widgets/p4m-checkout-widget/itemqtychanged/
+
+        $postBody = file_get_contents('php://input');
+        $postBody = json_decode($postBody);
+        
+        $resultObject = new \stdClass();
+
+        try {
+            $discountsArray = $this->updateCartItemQuantities( $postBody );
+            $totalsObject = $this->getCartTotals();
+
+            $resultObject->Success   = true;
+            $resultObject->Tax       = $totalsObject->Tax;
+            $resultObject->Shipping  = $totalsObject->Shipping;
+            $resultObject->Discount  = $totalsObject->Discount;
+            $resultObject->Total     = $totalsObject->Total;
+            $resultObject->Discounts = $discountsArray;
+        } catch (\Exception $e) {
+            $resultObject->Success = false;
+            $resultObject->Error   = $e->getMessage();
+        }
+
+        $resultJson = json_encode($resultObject, JSON_PRETTY_PRINT);
+        echo $resultJson; 
 
     }
 

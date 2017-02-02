@@ -217,16 +217,16 @@
                 if not throw an error, if so then apply it to the cart and return the discount details 
             */
 
-            $dis = new stdClass();
+            $dis = new P4M\Model\Discount();
 
             if ($discountCode != 'valid_code') // special discount code "valid_code" works, else fails
             {
                 throw new Exception('Unknown discount code.'); 
             }
 
-            $dis->Code = $discountCode;
-            $dis->Description = 'A demo valid coupon code!';
-            $dis->Amount = 0.01;
+            $dis->Code          = $discountCode;
+            $dis->Description   = 'A demo valid coupon code!';
+            $dis->Amount        = 0.01;
 
             return $dis;
         }
@@ -238,21 +238,39 @@
                 throw error if it is not on there
             */
 
-            $dis = new stdClass();
+            $dis = new P4M\Model\Discount();
 
             if ($discountCode != 'valid_code') // special discount code "valid_code" works, else fails
             {
                 throw new Exception('Unknown discount code.'); 
             }
 
-            $dis->Code = $discountCode;
-            $dis->Description = 'A demo valid coupon code!';
-            $dis->Amount = 0.01;
+            $dis->Code          = $discountCode;
+            $dis->Description   = 'A demo valid coupon code!';
+            $dis->Amount        = 0.01;
 
             return $dis;
         }
         
 
+         public function updateCartItemQuantities( $itemsUpdateArray ) {
+             /*
+                some logic to update the quantities on the cart lines
+            */
+
+            $dis = new P4M\Model\Discount();
+            $dis->Code           = 'valid_code';
+            $dis->Description    = 'A demo valid coupon code!';
+            $dis->Amount         = 0.01;
+
+            $disArray = [ $dis ];
+
+            return $disArray;
+         }
+
+
+
+         
 
         function localErrorPageUrl($message) {
             return 'http://' . $_SERVER['HTTP_HOST'] . '/error/' . urlencode($message);
@@ -308,6 +326,7 @@
                 '/p4m/updShippingService',
                 '/p4m/applyDiscountCode',
                 '/p4m/removeDiscountCode',
+                '/p4m/itemQtyChanged',
                 '/error/(message)'
         );
 
@@ -355,6 +374,7 @@
             case 'updShippingService' :     $my_shopping_cart->udpShippingService();        break;
             case 'applyDiscountCode' :      $my_shopping_cart->applyDiscountCode();         break;
             case 'removeDiscountCode' :     $my_shopping_cart->removeDiscountCode();        break;
+            case 'itemQtyChanged' :         $my_shopping_cart->itemQtyChanged();            break;
             
             default:
                 echo 'Hello unhandled POST endpoint : ' . htmlentities($p4mEndpoint);
