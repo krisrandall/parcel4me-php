@@ -88,7 +88,7 @@
             /*
                 logic to logout the current user from the shopping cart 
             */
-            return ture;
+            return true;
         }
 
         function setCurrentUserDetails( $p4m_consumer ) {
