@@ -166,15 +166,6 @@
 
             return true;
         }
-
-
-        function getAddressOfCurrentUser( $which_address ) {
-            /*
-                get either the "prefDelivery" or "billing" address object for the current user/consumer
-            */
-
-            return true;
-        }
         
 
         function setAddressOfCurrentUser( $which_address, $p4m_address ) {

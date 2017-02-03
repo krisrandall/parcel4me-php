@@ -30,7 +30,6 @@ abstract class P4M_Shop implements P4M_Shop_Interface
     abstract public function setCurrentUserDetails( $p4m_consumer );
     abstract public function getCartOfCurrentUser();
     abstract public function setCartOfCurrentUser( $p4m_cart );
-    abstract public function getAddressOfCurrentUser( $which_address );
     abstract public function setAddressOfCurrentUser( $which_address, $p4m_address );
     abstract public function getCheckoutPageHtml( $replacementParams );
     abstract public function updateShipping( $shippingServiceName, $amount, $dueDate );
