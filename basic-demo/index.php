@@ -151,7 +151,7 @@
             $cart->PaymentType  = "DB";
             $cart->Items        = [ $cartItem ];
             $cart->Currency     = "USD";
-            $cart->Reference    = "12345-".rand(); // This is REQUIRED (and needs to change for subsequent Paypal payments)
+            $cart->Reference    = "12345"; //.rand(); // This is REQUIRED (and needs to change for subsequent Paypal payments)
             $cart->removeNullProperties();
 
             return $cart;
@@ -168,6 +168,16 @@
         }
 
 
+        function updateAddressOfCurrentUser( $p4m_address ) {
+            /*
+                logic here to find the address using the id in the local DB
+                and update it, or add if not exists
+            */
+
+            return true;
+        }
+        
+        
         function getCheckoutPageHtml( $config ) {
 
             $smarty = new Smarty;
@@ -368,12 +378,18 @@
             case 'getP4MCart' :             $my_shopping_cart->getP4MCart();                break;
             case 'paypalSetup' :            $my_shopping_cart->paypalSetup();               break;
             case 'paypalCancel' :           $my_shopping_cart->paypalCancel();              break;
-            case 'purchaseComplete' :       $my_shopping_cart->purchaseComplete();          break;
+            case 'purchaseComplete' :       /* handled specially below */                   break;
             
             default:
                 echo 'Hello unhandled GET endpoint : ' . htmlentities($p4mEndpoint);
         }
     });
+    // this endpoint need only be implemented if your cart supports 3d secure transactions
+    $router->get('/p4m/purchaseComplete/([a-z0-9_-]+)', function($cartId) {
+        global $my_shopping_cart;
+        $my_shopping_cart->purchaseComplete($cartId);          
+    });
+
     // POST 
     $router->post('/p4m/(\w+)', function ($p4mEndpoint) {
         global $my_shopping_cart;
@@ -383,7 +399,7 @@
             case 'applyDiscountCode' :      $my_shopping_cart->applyDiscountCode();         break;
             case 'removeDiscountCode' :     $my_shopping_cart->removeDiscountCode();        break;
             case 'itemQtyChanged' :         $my_shopping_cart->itemQtyChanged();            break;
-            case 'purchase' :               $my_shopping_cart->purchase();            break;
+            case 'purchase' :               $my_shopping_cart->purchase();                  break;
             
             default:
                 echo 'Hello unhandled POST endpoint : ' . htmlentities($p4mEndpoint);

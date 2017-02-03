@@ -51,8 +51,15 @@ interface P4M_Shop_Interface {
     /**
         set the local shopping cart based on the p4m shopping cart details, passed in this format:
         http://developer.parcelfor.me/docs/documentation/api-integration/models/cart/
+        this should also update any user address records that are passed through
     */
     public function setCartOfCurrentUser( $p4m_cart );
+
+
+    /**
+        update (or create) an address in the local database
+    */
+    public function updateAddressOfCurrentUser( $p4m_address );
 
 
     /**

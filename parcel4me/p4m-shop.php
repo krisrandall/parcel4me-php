@@ -29,6 +29,7 @@ abstract class P4M_Shop implements P4M_Shop_Interface
     abstract public function setCurrentUserDetails( $p4m_consumer );
     abstract public function getCartOfCurrentUser();
     abstract public function setCartOfCurrentUser( $p4m_cart );
+    abstract public function updateAddressOfCurrentUser( $p4m_address );
     abstract public function getCheckoutPageHtml( $replacementParams );
     abstract public function updateShipping( $shippingServiceName, $amount, $dueDate );
     abstract public function getCartTotals();
@@ -47,9 +48,12 @@ abstract class P4M_Shop implements P4M_Shop_Interface
     }
 
     public function goHome() {
-        // this may be overriden for the shopping cart to set a different home page
         header("Location: /");
         exit();
+    }
+
+    public function goPaymentCompletePage() {
+        $this->goHome();
     }
 
 
@@ -71,6 +75,9 @@ abstract class P4M_Shop implements P4M_Shop_Interface
         // close this popped up window
         echo '<script>window.close();</script>';
     }
+
+
+
 
 
 
@@ -404,8 +411,12 @@ abstract class P4M_Shop implements P4M_Shop_Interface
 
             }
 
-            $redirectTo = ($_GET['currentPage']?:null);
-            echo '{ "RedirectUrl": "'.$redirectTo.'", "Success": true, "Error": null }';
+            if (array_key_exists('currentPage', $_GET)) {
+                $redirectTo = '"'.$_GET['currentPage'].'"';
+            } else {
+                $redirectTo = 'null';
+            }
+            echo '{ "RedirectUrl": '.$redirectTo.', "Success": true, "Error": null }';
 
         }
 
@@ -692,14 +703,34 @@ abstract class P4M_Shop implements P4M_Shop_Interface
 
 
     
-    public function purchaseComplete() {
+    public function purchaseComplete($cartId) {
         // http://developer.parcelfor.me/docs/documentation/parcel-for-me-widgets/p4m-checkout-widget/purchasecomplete/
 
         // This endpoint is called when a 3D Secure transaction has completed. 
         // It allows the host server to request the cart from P4M and store the cart, delivery and billing address details.
 
-        // TODO :
-        echo "NOT DONE YET !";
+        $this->setBearerToken($_COOKIE["p4mToken"]);
+        try {
+            $rob = $this->apiHttp_withoutErrorHandler('GET', 
+                        P4M_Shop_Urls::endPoint('cart', '/'.$cartId.'?wantAddress=true')
+            );
+
+            if ($rob->Success) {
+                if (property_exists($rob, 'Cart') && $rob->Cart) 
+                    $this->setCartOfCurrentUser($rob->Cart);
+                if (property_exists($rob, 'DeliverTo') && $rob->DeliverTo) 
+                    $this->updateAddressOfCurrentUser($rob->DeliverTo);
+                if (property_exists($rob, 'BillTo') && $rob->BillTo) 
+                    $this->updateAddressOfCurrentUser($rob->BillTo);
+
+                $this->goPaymentCompletePage();
+            } else {
+                $this->somethingWentWrong('non-success getting p4m cart after calling purchaseComplete');
+            }
+
+        } catch (\Exception $e) {
+            $this->somethingWentWrong($e->getMessage());
+        }
 
     }
 
