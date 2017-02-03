@@ -151,6 +151,7 @@
             $cart->PaymentType  = "DB";
             $cart->Items        = [ $cartItem ];
             $cart->Currency     = "USD";
+            $cart->Reference    = "12345-".rand(); // This is REQUIRED (and needs to change for subsequent Paypal payments)
             $cart->removeNullProperties();
 
             return $cart;

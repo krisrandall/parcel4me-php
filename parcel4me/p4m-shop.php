@@ -118,7 +118,7 @@ abstract class P4M_Shop implements P4M_Shop_Interface
         if ($err) {
             throw new \Exception("Error calling API : # " . $err . " <!-- ".$endpoint." -->");
         } elseif ($info && array_key_exists('http_code', $info) && $info['http_code']!=200) {
-            throw new \Exception("Error calling API : Returned {$info['http_code']}.");
+            throw new \Exception("Error calling API : Returned {$info['http_code']}. ({$info['url']})");
         } elseif ($response=='') {
             throw new \Exception("Error calling API : returned blank (token could be expired)");
         } else {
@@ -145,10 +145,12 @@ abstract class P4M_Shop implements P4M_Shop_Interface
         // do a http request, but for any error use the "somethingWentWrong" method 
 
         try {
-            $this->apiHttp_withoutErrorHandler($method, $endpoint, $data = null);
+            $result = $this->apiHttp_withoutErrorHandler($method, $endpoint, $data = null);
         } catch (\Exception $e) {
-            $this->somethingWentWrong($e);
+            $result = $this->somethingWentWrong($e);
         }
+
+        return $result;
 
     }
 
@@ -329,7 +331,7 @@ abstract class P4M_Shop implements P4M_Shop_Interface
         $rob = $this->apiHttp('GET',  P4M_Shop_Urls::endPoint('consumer'));
 
         if (!$rob->Success) {
-            $this->somethingWentWrong('Unsuccessful fetching consumer: '.$rob->Error);
+            echo '{ "Success": false, "Error": "Unsuccessful fetching consumer ('.$rob->Error.')" }';
         } else {
 
             $consumer = $rob->Consumer;
@@ -672,7 +674,8 @@ abstract class P4M_Shop implements P4M_Shop_Interface
             // Send the p4m server paypal setup API request 
             $this->setBearerToken($_COOKIE["p4mToken"]);
             try {
-                $rob = $this->apiHttp_withoutErrorHandler('POST', P4M_Shop_Urls::endPoint('paypalSetup', '/'.$cartId));
+                $postParam = json_encode( array ( 'cartId'  => $cartId ) );
+                $rob = $this->apiHttp_withoutErrorHandler('POST', P4M_Shop_Urls::endPoint('paypalSetup'), $postParam );
                 $resultObject->Success = true;
                 $resultObject->Token   = $rob->Token;            
             } catch (\Exception $e) {
