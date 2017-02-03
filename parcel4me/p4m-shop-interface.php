@@ -57,9 +57,19 @@ interface P4M_Shop_Interface {
 
 
     /**
-        update (or create) an address in the local database
+       get an address in the local database
+       pass in either "billing" or "prefDelivery" 
+       (the address record then corresponds to the PrefDeliveryAddressId and BillingAddressId on the Consumer)
     */
-    public function updateAddressOfCurrentUser( $p4m_address );
+    public function getAddressOfCurrentUser( $which_address );
+
+
+    /**
+        update (or create) an address in the local database
+        pass in either "billing" or "prefDelivery" 
+        (the address record then corresponds to the PrefDeliveryAddressId and BillingAddressId on the Consumer)
+    */
+    public function setAddressOfCurrentUser( $which_address, $p4m_address );
 
 
     /**

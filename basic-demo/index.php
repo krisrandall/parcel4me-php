@@ -168,16 +168,25 @@
         }
 
 
-        function updateAddressOfCurrentUser( $p4m_address ) {
+        function getAddressOfCurrentUser( $which_address ) {
             /*
-                logic here to find the address using the id in the local DB
+                get either the "prefDelivery" or "billing" address object for the current user/consumer
+            */
+
+            return true;
+        }
+        
+
+        function setAddressOfCurrentUser( $which_address, $p4m_address ) {
+            /*
+                logic here to find the address in the local DB
                 and update it, or add if not exists
             */
 
             return true;
         }
         
-        
+
         function getCheckoutPageHtml( $config ) {
 
             $smarty = new Smarty;

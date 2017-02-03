@@ -19,6 +19,7 @@ define ('SHM_ClientCredentialsToken', 1);
 abstract class P4M_Shop implements P4M_Shop_Interface
 {
 
+
     // Your Shopping Cart must implement the following :
 
     abstract public function userIsLoggedIn();
@@ -29,7 +30,8 @@ abstract class P4M_Shop implements P4M_Shop_Interface
     abstract public function setCurrentUserDetails( $p4m_consumer );
     abstract public function getCartOfCurrentUser();
     abstract public function setCartOfCurrentUser( $p4m_cart );
-    abstract public function updateAddressOfCurrentUser( $p4m_address );
+    abstract public function getAddressOfCurrentUser( $which_address );
+    abstract public function setAddressOfCurrentUser( $which_address, $p4m_address );
     abstract public function getCheckoutPageHtml( $replacementParams );
     abstract public function updateShipping( $shippingServiceName, $amount, $dueDate );
     abstract public function getCartTotals();
@@ -42,18 +44,14 @@ abstract class P4M_Shop implements P4M_Shop_Interface
 
     // Your Shopping Cart may implement the following :
 
+
+    public $HOME_URL                = '/';
+    public $PAYMENT_COMPLETE_URL    = '/';
+
+
     public function getCurrentSessionId() {
         // this may be overridden if the shopping cart uses a session id other than the PHP session id internally
         return session_id();
-    }
-
-    public function goHome() {
-        header("Location: /");
-        exit();
-    }
-
-    public function goPaymentCompletePage() {
-        $this->goHome();
     }
 
 
@@ -79,9 +77,13 @@ abstract class P4M_Shop implements P4M_Shop_Interface
 
 
 
-
-
     // Internal Class Functions : 
+
+
+    private function redirectTo($pageLocation) {
+        header("Location: {$pageLocation}");
+        exit();
+    }
 
 
     private $bearerToken;
@@ -462,7 +464,7 @@ abstract class P4M_Shop implements P4M_Shop_Interface
         $currentCart = $this->getCartOfCurrentUser();
 
         if ( (!isset($currentCart->Items)) || (empty($currentCart->Items)) ) {
-            $this->goHome();
+            $this->redirectTo($this->HOME_URL);
         }
 
         if ( (!array_key_exists('gfsCheckoutToken', $_COOKIE)) || ($_COOKIE['gfsCheckoutToken']=='') ) {
@@ -660,8 +662,63 @@ abstract class P4M_Shop implements P4M_Shop_Interface
     public function purchase() {
         // http://developer.parcelfor.me/docs/documentation/parcel-for-me-widgets/p4m-checkout-widget/purchase/
 
-        // TODO :
-        echo "NOT DONE YET !";
+        $thisPostBody = file_get_contents('php://input');
+        $thisPostBody = json_decode($thisPostBody);
+        
+        $resultObject = new \stdClass();
+
+        // validate that the cart total from the widget is correct to prevent cart tampering in the browser
+        $localCartTotals = $this->getCartTotals();
+        if ($thisPostBody->cartTotal != $localCartTotals->Total) {
+            $resultObject->Success = false;
+            $resultObject->Error   = "Invalid cart total";
+            error_log('Invalid cartTotal, p4m says : '.$thisPostBody->cartTotal.', local db says : '.$localCartTotals->Total);
+        } else {
+
+            try {
+
+                $this->setBearerToken($_COOKIE["p4mToken"]);
+                $p4mPostBody = json_encode( 
+                                array ( 
+                                    'cartId'        => $thisPostBody->cartId,
+                                    'CVV'           => $thisPostBody->cvv
+                                ) 
+                            );
+                if (property_exists($thisPostBody, 'newDropPoint')) {
+                    $p4mPostBody->NewDropPoint = $thisPostBody->newDropPoint;
+                }
+                $rob = $this->apiHttp_withoutErrorHandler('POST', P4M_Shop_Urls::endPoint('purchase'), $p4mPostBody );
+
+                $resultObject->Success   = true;
+                
+                if ( (!property_exists($rob, 'ACSUrl')) || (!$rob->ACSUrl) ) {
+
+                    if (property_exists($rob, 'Cart') && $rob->Cart)            $this->setCartOfCurrentUser($rob->Cart);
+                    if (property_exists($rob, 'DeliverTo') && $rob->DeliverTo)  $this->setAddressOfCurrentUser('prefDelivery', $rob->DeliverTo);
+                    if (property_exists($rob, 'BillTo') && $rob->BillTo)        $this->setAddressOfCurrentUser('billing',      $rob->BillTo);
+
+                    $resultObject->RedirectUrl = $this->PAYMENT_COMPLETE_URL;
+                
+                } else {
+
+                    $resultObject->ASCUrl           = $rob->ACSUrl;
+                    $resultObject->PaReq            = $rob->PaReq;
+                    $resultObject->ACSResponseUrl   = $rob->ACSResponseUrl;
+                    $resultObject->P4MData          = $rob->P4MData;
+
+                }
+
+    
+            } catch (\Exception $e) {
+                $resultObject->Success     = false;
+                $resultObject->Error       = $e->getMessage();
+                $resultObject->RedirectUrl = $this->localErrorPageUrl($e->getMessage());
+            }
+
+        }
+
+        $resultJson = json_encode($resultObject, JSON_PRETTY_PRINT);
+        echo $resultJson; 
 
     }
 
@@ -716,14 +773,10 @@ abstract class P4M_Shop implements P4M_Shop_Interface
             );
 
             if ($rob->Success) {
-                if (property_exists($rob, 'Cart') && $rob->Cart) 
-                    $this->setCartOfCurrentUser($rob->Cart);
-                if (property_exists($rob, 'DeliverTo') && $rob->DeliverTo) 
-                    $this->updateAddressOfCurrentUser($rob->DeliverTo);
-                if (property_exists($rob, 'BillTo') && $rob->BillTo) 
-                    $this->updateAddressOfCurrentUser($rob->BillTo);
-
-                $this->goPaymentCompletePage();
+                if (property_exists($rob, 'Cart') && $rob->Cart)            $this->setCartOfCurrentUser($rob->Cart);
+                if (property_exists($rob, 'DeliverTo') && $rob->DeliverTo)  $this->setAddressOfCurrentUser('prefDelivery', $rob->DeliverTo);
+                if (property_exists($rob, 'BillTo') && $rob->BillTo)        $this->setAddressOfCurrentUser('billing',      $rob->BillTo);
+                $this->redirectTo($this->PAYMENT_COMPLETE_URL);
             } else {
                 $this->somethingWentWrong('non-success getting p4m cart after calling purchaseComplete');
             }

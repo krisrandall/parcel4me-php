@@ -29,6 +29,7 @@ class P4M_Shop_Urls
             'restoreLastCart'           => P4M_API_SERVER . '/restoreLastCart',
             'paypalSetup'               => P4M_API_SERVER . '/paypalSetup',
             'cart'                      => P4M_API_SERVER . '/cart',
+            'purchase'                  => P4M_API_SERVER . '/purchase',
 
 
             // Global Freight Solutions (GFS) endpoints
