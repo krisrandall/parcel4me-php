@@ -37,6 +37,7 @@ abstract class P4M_Shop implements P4M_Shop_Interface
     abstract public function updateWithDiscountCode( $discountCode );
     abstract public function updateRemoveDiscountCode( $discountCode );
     abstract public function updateCartItemQuantities( $itemsUpdateArray );
+    abstract public function completePurchase ( $p4m_cart, $transactionId, $transationTypeCode, $authCode );
     abstract public function localErrorPageUrl( $message );
 
 
@@ -696,6 +697,8 @@ abstract class P4M_Shop implements P4M_Shop_Interface
                     if (property_exists($rob, 'DeliverTo') && $rob->DeliverTo)  $this->setAddressOfCurrentUser('prefDelivery', $rob->DeliverTo);
                     if (property_exists($rob, 'BillTo') && $rob->BillTo)        $this->setAddressOfCurrentUser('billing',      $rob->BillTo);
 
+                    $this->completePurchase( $rob->Cart, $rob->Id, $rob->TransactionTypeCode, $rob->AuthCode );
+
                     $resultObject->RedirectUrl = $this->PAYMENT_COMPLETE_URL;
                 
                 } else {
@@ -775,6 +778,9 @@ abstract class P4M_Shop implements P4M_Shop_Interface
                 if (property_exists($rob, 'Cart') && $rob->Cart)            $this->setCartOfCurrentUser($rob->Cart);
                 if (property_exists($rob, 'DeliverTo') && $rob->DeliverTo)  $this->setAddressOfCurrentUser('prefDelivery', $rob->DeliverTo);
                 if (property_exists($rob, 'BillTo') && $rob->BillTo)        $this->setAddressOfCurrentUser('billing',      $rob->BillTo);
+
+                $this->completePurchase( $rob->Cart, '3DSecure', '3DSecure', '3DSecure');
+                
                 $this->redirectTo($this->PAYMENT_COMPLETE_URL);
             } else {
                 $this->somethingWentWrong('non-success getting p4m cart after calling purchaseComplete');

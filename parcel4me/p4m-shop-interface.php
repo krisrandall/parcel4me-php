@@ -120,6 +120,15 @@ interface P4M_Shop_Interface {
     public function updateCartItemQuantities( $itemsUpdateArray );
 
 
+    /**
+        close the cart and do any other required processing
+        Params :
+            Cart	The P4M Cart including items and discounts
+            Id	The transaction Id
+            TransactionTypeCode	"DB" debit, "PA" payment authorization
+            AuthCode	PSP authorization code used for refunds, etc
+    */
+    public function completePurchase ( $p4m_cart, $transactionId, $transationTypeCode, $authCode );
 
 
     /**

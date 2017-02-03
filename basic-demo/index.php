@@ -280,7 +280,13 @@
          }
 
 
+         public function completePurchase ( $p4m_cart, $transactionId, $transationTypeCode, $authCode ) {
+             /*
+                some logic to update the db to show that the purchase has happened and clear the cart 
+            */
 
+             return true;
+         }
          
 
         function localErrorPageUrl($message) {
