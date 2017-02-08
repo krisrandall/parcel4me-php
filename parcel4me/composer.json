@@ -1,6 +1,0 @@
-{
-    "require": {
-        "krisrandall/openid-connect-with-client-credentials-php": "dev-master",
-        "firebase/php-jwt": "^4.0"
-    }
-}
