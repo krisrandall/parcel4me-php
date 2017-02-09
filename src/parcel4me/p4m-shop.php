@@ -2,9 +2,6 @@
 
 namespace P4M;
 
-// Require composer autoloader
-require_once __DIR__.'/vendor/autoload.php';
-
 require_once 'HTTP/Request2.php';
 
 require 'p4m-shop-interface.php';
@@ -480,7 +477,11 @@ abstract class P4M_Shop implements P4M_Shop_Interface
                 $response = $oidc->requestClientCredentialsToken();
 
                 if (!$response) {
-                    $this->somethingWentWrong('OIDC auth returned false');
+                    $this->somethingWentWrong('GFS server returned false (or blank) :'.(string)$response);
+                } else if (!is_object($response)) {
+                    throw new \Exception('Non object returned from GFS server :'.(string)$response);
+                } else if (!property_exists($response, 'access_token')) {
+                    throw new \Exception('Response from GFS server has no access_token:'.(string)$response);
                 }
 
             } catch (\OpenIDConnectClientException $oidcE) {
