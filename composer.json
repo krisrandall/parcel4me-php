@@ -11,5 +11,10 @@
             "name": "krisrandall",
             "email": "kris.randall@gmail.com"
         }
-    ]
+    ],
+    "autoload": {
+        "psr-0": {
+            "P4M": "src/parcel4me"
+        }
+    }
 }
