@@ -2,8 +2,8 @@
     "name": "krisrandall/parcel4me",
     "description": "A one-click checkout and delivery package for PHP shopping carts",
     "require": {
-        "krisrandall/openid-connect-with-client-credentials-php": "dev-master",
-        "firebase/php-jwt": "^4.0"
+        "firebase/php-jwt": "^4.0",
+        "krisrandall/openid-connect-with-client-credentials-php": "^0.3.0"
     },
     "license": "MIT",
     "authors": [
